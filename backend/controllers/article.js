@@ -1,6 +1,7 @@
 const Article = require('../models/article');
 const fs = require('fs');
 const {response} = require('express');
+const connectDB = require('../connect/db')
 
 //Afficher tous les articles
 exports.getAllArticle = (req, res, next) => {
