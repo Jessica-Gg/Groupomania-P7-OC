@@ -3,7 +3,7 @@ const Article = function(article){
     this.date = article.date;
     this.titre = article.titre;
     this.imageUrl = article.imageUrl;
-    this.description = article.description; 
+    this.contenu = article.contenu; 
 }
 
 module.export = Article;

@@ -87,7 +87,6 @@ export default {
                     localStorage.setItem('userToken',response.data.token,)
                     localStorage.setItem('userId',response.data.id,)
                     this.$router.push("/profil")
-                //    location.replace('http://localhost:8080/Profil')
                 })
                  .catch(function (error) {
                     console.log(error)
@@ -122,9 +121,8 @@ export default {
 
 .formInput {
     padding:0.5em;
-    border: none;
     border-radius: 0.5em;
-    background: $primary;
+    background: #FFFF;
     font-weight: 500;
     font-size: 1em;
     flex:1;
