@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const db = require('./connect/db');
+const morgan = require('morgan')
 
 const userRoutes = require('./routes/user');
 const articleRoutes = require('./routes/article');
@@ -16,14 +17,16 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(morgan('combined'))
+
 //Conversion en JSON
 app.use(bodyParser.json());
 
 //Gestion des images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use('/api/auth/', userRoutes);
-app.use('/api/auth/', articleRoutes);
+app.use('/auth', userRoutes);
+//app.use('/auth/', articleRoutes);
 
 app.get('/', function(req, res) {
   res.send('hello world');

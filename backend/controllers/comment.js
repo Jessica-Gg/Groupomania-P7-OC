@@ -5,19 +5,19 @@ const {response} = require('express');
 //Afficher tous les commentaires
 exports.getAllComment = (req, res, next) => {
     Comment.find()
-    .then(article => {
-      res.status(200).json(article);
+    .then(comment => {
+      res.status(200).json(comment);
     })
     .catch(error => {
       res.status(400).json({error: error});
     });
 };
 
-//Afficher un article
+//Afficher un commentaire
 exports.getOneComment = (req, res, next) => {
     Comment.findOne({_id: req.params.id})
-    .then(article => {
-      res.status(200).json(article);
+    .then(comment => {
+      res.status(200).json(comment);
       })
     .catch(error => {
       res.status(404).json({
@@ -46,7 +46,7 @@ exports.modifyComment = (req, res, next) => {
       ...JSON.parse(req.body.article),
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : {...req.body};
-        Comment.updateOne({_id: req.params.id}, {...articleObject, _id: req.params.id})
+        Comment.updateOne({_id: req.params.id}, {...commentObject, _id: req.params.id})
           .then(() => res.status(200).json({message: 'Commentaire modifié avec succès !'}))
           .catch(error => res.status(400).json({error}));  
 };
