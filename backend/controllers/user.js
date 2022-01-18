@@ -83,3 +83,11 @@ exports.getOneUser= (req, res, next) => {
 
 
 //Supprimer un utilisateur
+exports.deleteUser= (req, res) => {
+  User.findOne({id: req.params.id})
+    .then(User => {
+      User.deleteOne({id: req.params.id}) 
+        .then(() => res.status(200).json({message:'Utilisateur supprimé !'}))
+        .catch(error => res.status(400).json(error));
+    });
+};

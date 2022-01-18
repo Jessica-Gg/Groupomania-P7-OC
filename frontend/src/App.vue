@@ -7,9 +7,6 @@
       <router-link to="/profil"> Mon Profil <v-icon name="regular/user"/></router-link>
     </header>
     <router-view/>
-    <footer>
-      <p>{{ copyright }}</p>
-    </footer>
   </div>
 </template>
 
@@ -39,6 +36,7 @@ body {
     padding: 0;
     width: 100%;
     height: 100vh;
+    position: relative;
 }
 
 #app {
@@ -62,18 +60,6 @@ body {
   
   v-icon{
     color:#ffffff;
-  }
-}
-
-footer{
-  background: $primary;
-  bottom:0;
-  width:100%;
-  height:3.5em;
-
-  p{
-    padding-top: 1em;
-    color:#ffffff; 
   }
 }
 </style>

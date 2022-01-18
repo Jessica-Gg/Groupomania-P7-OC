@@ -1,16 +1,15 @@
 <template>
     <div class="login">
-        {{mode}}
-        <h1 class="title" v-if="mode == 'login'">Connexion</h1>
-        <h1 class="title" v-else>Inscription</h1>
-        <p class="subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? <span class="card__action"><router-link to="/login?mode=create">Créer un compte</router-link></span></p>
-        <p class="subtitle" v-else>Tu as déjà un compte ? <span class="card__action"><router-link to="/login?mode=login">Se connecter</router-link></span></p>
-        <form method="post" id="formulaire" @submit.prevent="CreateAccount">
-            <div class="rowForm" v-if="mode == 'create'">
+        <h1 class="title" v-if="mode == 'connexion'"> {{mode}}</h1>
+        <h1 class="title" v-else>{{mode}}</h1>
+        <p class="subtitle" v-if="mode == 'connexion'">Tu n'as pas encore de compte ? <span class="card__action"><router-link to="/login?mode=inscription">Créer un compte</router-link></span></p>
+        <p class="subtitle" v-else>Tu as déjà un compte ? <span class="card__action"><router-link to="/login?mode=connexion">Se connecter</router-link></span></p>
+        <form method="post" id="formulaire">
+            <div class="rowForm" v-if="mode == 'inscription'">
                 <label for='firstname'>Nom :</label><br>
                 <input v-model="userInfos.firstname" id="firstname" required class="formInput" type="text" pattern="[A-Za-z]+" title="caractères alphabétiques uniquement" placeholder="Nom"/>
             </div>
-            <div class="rowForm" v-if="mode == 'create'">  
+            <div class="rowForm" v-if="mode == 'inscription'">  
                 <label for="lastname">Prénom :</label><br>
                 <input v-model="userInfos.lastname" id="lastname" required class="formInput" type="text" pattern="[A-Za-z]+" title="caractères alphabétiques uniquement" placeholder="Prénom"/>
             </div>
@@ -22,12 +21,12 @@
                 <label for="password">Mot de passe :</label><br>
                 <input v-model="userInfos.password" id="password" required class="formInput" type="password" placeholder="Mot de passe"/>
             </div>
-             <div class="rowForm" v-if="mode == 'create'">
+             <div class="rowForm" v-if="mode == 'inscription'">
                 <label for="confirmPassword">Confirmer le mot de passe :</label><br>
                 <input v-model="userInfos.confirmPassword" required id="confirmPassword"  class="formInput" type="password" placeholder="Mot de passe"/>
             </div>
             <div class="rowForm">
-                <button type="submit" @click.prevent="login()" class="btn btn-outline-primary"  v-if="mode == 'login'">
+                <button type="submit" @click.prevent="login()" class="btn btn-outline-primary"  v-if="mode == 'connexion'">
                     <span>Connexion</span>
                 </button>
                 <button type="submit" @click.prevent="createAccount()" class="btn btn-outline-primary" v-else>
@@ -45,7 +44,7 @@ export default {
     props: {
         mode: {
             type: String,
-            default: "login"
+            default: "connexion"
         }
     },
     data() {
@@ -70,7 +69,7 @@ export default {
                 .post('/api/auth/signup', this.userInfos )
                 .then(response=>{
                     console.log(response)
-                    this.$router.push("/login?mode=login")
+                    this.$router.push("/login?mode=connexion")
                 })
                 .catch(function (error) {
                     console.log(error)
@@ -84,8 +83,9 @@ export default {
                 axios
                 .post('/api/auth/login', this.userInfos)
                 .then(response => {
-                    localStorage.setItem('userToken',response.data.token,)
-                    localStorage.setItem('userId',response.data.id,)
+                    localStorage.setItem('userToken',response.data.token)
+                    localStorage.setItem('userId',response.data.id)
+                    localStorage.setItem('userInfos', this.userInfos)
                     this.$router.push("/profil")
                 })
                  .catch(function (error) {
