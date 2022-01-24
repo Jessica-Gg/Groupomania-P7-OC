@@ -68,10 +68,13 @@ exports.login = (req, res, next) => {
 }
 
 //Récupérer un seul utilisateur
-exports.getOneUser= (req, res, next) => {
-  User.findOne({id: req.params.id})
+exports.getOneUser= (req, res, next) => { 
+  User.findOne({ 
+    where: { id: req.params.id }, 
+    attributes: ["id", "firstname", "laststname", "description"],})
     .then(user => {
       res.status(200).json(user);
+      console.log(user)
     })
     .catch(error => {
       res.status(400).json({error: error});
@@ -80,14 +83,66 @@ exports.getOneUser= (req, res, next) => {
 };
 
 //Modifier un utilisateur
+exports.modifyUser = (req,res, next)=>{
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+  const userId = decodedToken.userId;
+  const admin = decodedToken.admin;
 
+  if (req.body.description == "" ) {
+    return res
+      .status(400)
+      .json({ error: "Vous ne pouvez enregistrer une description vide" });
+  }
+
+  User.findOne({
+    where: { id: req.params.id },
+  }).then((user) => {
+    if (user.id === userId || admin === true) {
+      user
+        .update({
+          description: req.body.description,
+        })
+        .then(() => res.status(200).json({ message: "Description mise à jour" }))
+        .catch((error) =>
+          res
+            .status(400)
+            .json({ error: "Impossible de mettre à jour votre profil !" })
+        );
+    }
+  });
+}
 
 //Supprimer un utilisateur
 exports.deleteUser= (req, res) => {
-  User.findOne({id: req.params.id})
-    .then(User => {
-      User.deleteOne({id: req.params.id}) 
-        .then(() => res.status(200).json({message:'Utilisateur supprimé !'}))
-        .catch(error => res.status(400).json(error));
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+  const userId = decodedToken.userId;
+  const admin = decodedToken.admin;
+
+  User.findOne({
+    where: { id: req.params.id },
+  })
+    .then((user) => {
+      if (user.id === userId || admin === true) {
+        user
+          .destroy()
+          .then(() => {
+            res.status(200).json({
+              message: "Utilisateur supprimé !",
+            });
+          })
+          .catch((error) => {
+            res.status(400).json({
+              error: "L'utilisateur n'a pas pu être supprimé !",
+            });
+          });
+      }
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: "L'utilisateur n'a pas pu être supprimé !",
+      });
     });
+ 
 };

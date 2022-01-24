@@ -6,6 +6,7 @@ const morgan = require('morgan')
 
 const userRoutes = require('./routes/user');
 const articleRoutes = require('./routes/article');
+const commentRoutes = require('./routes/comment');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use((req, res, next) => {
   next();
 });
 
+//Package pour afficher un log de toutes les requêtes envoyées.
 app.use(morgan('combined'))
 
 //Conversion en JSON
@@ -25,18 +27,14 @@ app.use(bodyParser.json());
 //Gestion des images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use('/auth', userRoutes);
-//app.use('/auth/', articleRoutes);
+//Routes des utilisateurs, articles et commentaires
+app.use('/user', userRoutes);
+app.use('/posts', articleRoutes);
+app.use('/comment', commentRoutes);
 
+//Tests de routes via Postman
 app.get('/', function(req, res) {
   res.send('hello world');
-});
-
-app.post('/users/new', function(req, res){
-  db.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-    if (error) throw error;
-    console.log('The solution is: ', results[0].solution);
-  });
 });
 
 module.exports = app;

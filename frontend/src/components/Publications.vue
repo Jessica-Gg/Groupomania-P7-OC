@@ -2,7 +2,7 @@
     <div class="m-3 publications_card">
         <div class="card cardIndex shadow">
             <div class="card-header bg-white">
-                <h2 class="card-title text-center">lastname firstname</h2>
+                <h2 class="card-title text-center">{{user.lastname}} {{user.firstname}}</h2>
                 <h3 class="card-title text-center">date</h3>
             </div>
             <div class="card-body">
@@ -18,8 +18,21 @@
 </template>
 
 <script>
+import {mapState, mapActions} from 'vuex'
+
 export default {
-  name: 'Publications'
+  name: 'Publications',
+    data(){ 
+        return{}
+    },
+
+    computed:{
+        ...mapState(['user'])
+    },
+
+    methods: {
+        ...mapActions(['getUserInfos'])
+    }
 }
 </script>
 
