@@ -32,10 +32,8 @@ exports.signup = (req, res, next) => {
               }
           }else{
              res.status(401).json({message:"Adresse mail incorrecte"})
-          }
-      
+          }  
   })
-
 };
 
 exports.login = (req, res, next) => {
@@ -113,18 +111,22 @@ exports.modifyUser = (req,res, next)=>{
   });
 }
 
+console.log('plip ctrl')
 //Supprimer un utilisateur
 exports.deleteUser= (req, res) => {
-  const token = req.headers.authorization.split(" ")[1];
-  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-  const userId = decodedToken.userId;
-  const admin = decodedToken.admin;
-
-  User.findOne({
-    where: { id: req.params.id },
+//  const token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.authorization.substr(6);
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const id = decodedToken.id;
+//    const admin = decodedToken.admin;
+    console.log('plip ad', id)
+  console.log('toto delete 1')
+  User.getOneUser({
+    where: { userId: id },
   })
+  console.log('toto delete 2')
     .then((user) => {
-      if (user.id === userId || admin === true) {
+      if (user.id === userId) {
         user
           .destroy()
           .then(() => {

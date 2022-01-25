@@ -29,15 +29,22 @@ exports.getOneArticle = (req, res, next) => {
 
 //Créer un article
 exports.createArticle = (req, res, next) => {
-  const articleObject = JSON.parse(req.body.article);
-  delete articleObject._id;
-  const newArticle = new Article({
-    ...articleObject,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  });
-    newArticle.save()
-      .then(() => res.status(201).json({message: 'Article enregistré avec succès !'}))
-      .catch(error => res.status(400).json({error}));
+  if(req.body.image == null){
+    req.body.image = null
+  }else {
+    req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  }
+  
+  const articleData = new Article(req.body);
+  if(req.body.constructor === Object && Object.keys(req.body).lenght === 0){
+    res.send(400).send({succes:false, message:'Merci de remplir au moins un champs'})
+  }else{
+    Article.createArticle(articleData,(err, article)=>{
+        if(err)
+          res.send(err);
+          res.json({status: true, message: 'Nouvelle publication créée !', data: article})   
+    })
+}
 };
 
 //Modifier un article
@@ -47,18 +54,18 @@ exports.modifyArticle = (req, res, next) => {
       ...JSON.parse(req.body.article),
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : {...req.body};
-        Article.updateOne({_id: req.params.id}, {...articleObject, _id: req.params.id})
+        Article.updateOne({id: req.params.id}, {...articleObject, id: req.params.id})
           .then(() => res.status(200).json({message: 'Article modifié avec succès !'}))
           .catch(error => res.status(400).json({error}));  
 };
 
 //Supprimer un article
 exports.deleteArticle = (req, res, next) => {
-  Article.findOne({_id: req.params.id})
+  Article.findOne({id: req.params.id})
     .then(Article => {
       const filename = Article.imageUrl.split('/images/')[1];
       fs.unlink(`images/${filename}`, () => {
-          Article.deleteOne({_id: req.params.id})
+          Article.deleteOne({id: req.params.id})
             .then(() => res.status(200).json({message: 'Article supprimé avec succès !'}))
             .catch(error => res.status(400).json({error}));
       });

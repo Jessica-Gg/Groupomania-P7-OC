@@ -93,7 +93,7 @@ export default {
                     localStorage.setItem('userToken',response.data.token)
                     localStorage.setItem('userId',response.data.id)
                     localStorage.setItem('userInfos', this.userInfos)
-                    console.log('test login',this.userInfos)
+                 //   console.log('test login',this.userInfos)
                     this.$router.push("/profil")
                 })
                  .catch(function (error) {

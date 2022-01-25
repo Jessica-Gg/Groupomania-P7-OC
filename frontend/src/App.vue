@@ -18,12 +18,6 @@ export default{
           groupName : 'Groupomania',
         }
       },
-      computed: {
-        copyright() {
-          const currentYear = new Date().getFullYear()
-          return `Copyright ${this.groupName} ${currentYear}`
-        }
-      }
     }
 </script>
 

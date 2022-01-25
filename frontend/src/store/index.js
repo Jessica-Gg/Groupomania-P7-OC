@@ -18,7 +18,7 @@ export default new Vuex.Store({
   },
   mutations: {
       USER_INFOS(state,[id ,firstname,lastname, email, password, description, admin]) {
-        state.user.userId = id,
+        state.user.id = id,
         state.user.firstname = firstname,
         state.user.lastname = lastname,
         state.user.email = email,
@@ -39,7 +39,7 @@ export default new Vuex.Store({
        })
        .then(response => {
          console.log(response)
-         valeur.commit('userInfos',[response.data[0].id,response.data[0].firstname,response.data[0].lastname,response.data[0].email,response.data[0].admin]	)   
+         valeur.commit('userInfos',[response.data[0].id, response.data[0].firstname, response.data[0].lastname, response.data[0].email, response.data[0].admin]	)   
         // this.userInfos = response.data
        })
        .catch(error => {
