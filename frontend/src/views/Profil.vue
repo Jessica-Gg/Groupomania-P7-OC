@@ -100,11 +100,16 @@ export default {
     },
 
   //Changer la description
-    newDescription() {
-      const userId = localStorage.getItem('userId')
+    newDescription : function() {
+      const id = localStorage.getItem('userId')
+      const token = localStorage.getItem('userToken')    
       if(this.descrition !== null){
         axios
-        .put('api/user/', userId)
+        .put('/api/user/' + id, {
+          headers: {
+            'Authorization': 'Bearer' + token
+          }
+        })
         .then(response =>{
           console.log(response)
         })
@@ -115,7 +120,7 @@ export default {
         alert('la descrpition n\'a pas pu être enregistrée')
       }
     },
-  }
+  },
 
 }
 

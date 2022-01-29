@@ -3,25 +3,23 @@ console.log('auth')
 
 module.exports = (req, res, next) => {
   try {
-    console.log('test auth')
-  //  const token = req.headers.authorization.split(' ')[1];
+console.log('test auth');
     const token = req.headers.authorization.substr(6);
-    console.log('plop', req.headers.authorization);
-    console.log('plop token', token)
+console.log('plop auth', req.headers.authorization );
+console.log('plop token', token);
     const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
-    console.log('plop', decodedToken);
     const userId = decodedToken.id;
-    console.log('plop', userId);
+console.log('plop userId', userId);
 
     if (req.body.id && req.body.id !== userId) {
-      console.log('test auth if', userId)
       throw '403: unauthorized request';
     } else {
-      console.log('plop next')
+      console.log('plop next', userId)
       next();
     }
   } catch {
-    res.status(401).json({   
+    console.log('error auth') 
+    res.status(401).json({  
       error: new Error('Invalid request!')
     });
   }
