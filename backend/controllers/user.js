@@ -83,7 +83,6 @@ exports.getOneUser= (req, res, next) => {
 
 //Modifier un utilisateur
 exports.modifyUser = (req,res, next)=>{
-  console.log('plop modif')
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
   const id = decodedToken.id;
@@ -97,8 +96,8 @@ exports.modifyUser = (req,res, next)=>{
 
   connectDB.query('SELECT id FROM user WHERE id=?', [id], async(error, result) => {
     try {
-      if (req.params.id === id) {
-        connectDB.query('UPDATE user SET description=? FROM user WHERE id=?', [newDescription], [id], async(error, result) => {
+      if (req.params.id == id) {
+        connectDB.query('UPDATE user SET description=? WHERE id=?', [newDescription, id], async(error, result) => {
           if(error){
             console.log(error);
           }else{
