@@ -100,7 +100,7 @@ export default {
                     console.log(error)
                 })
             } else {  
-                console.log('les informations entrées ne sont pas correctes')
+                console.log('Les informations entrées ne sont pas correctes')
                 console.log(this.error)
             }
         }   

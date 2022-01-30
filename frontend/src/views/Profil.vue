@@ -11,7 +11,7 @@
               <form>
               <label for="changeDescription" class="font-weight-bold">Présentation : </label><br>
               <p>{{ user.description }} {{ description }}</p>
-              <input id="changeDescription" type="text" v-model="description" placeholder="Entrer une description">
+              <input id="changeDescription" type="text" v-model="description" placeholder="Entrez une description">
               <button type="submit" class="btn btn-outline-dark ml-3 mt-1" @click="newDescription()">Enregistrer</button>
               </form>
             </div>
@@ -28,8 +28,8 @@
     </div>
     <div class="publicationSection">
       <h2>Mes publications</h2>
-        <button type="submit" class="btn btn-outline-primary mb-3 mt-3">
-          <router-link to="/newpost"><span class="font-weight-bold">Créer une nouvelle publication</span></router-link>
+        <button type="submit" class="btn btn-outline-primary mb-3 mt-3 btnNewPost">
+          <router-link class="linkNewPost" to="/newpost"><span class="font-weight-bold">Créer une nouvelle publication</span></router-link>
         </button>
         <Publications/>
     </div>  
@@ -71,11 +71,9 @@ export default {
 
   //Supprimer le compte
     deleteAccount: function(){
-      const confirmDeleteAccount = window.confirm("Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irreversible. Toutes vos données seront effacées.")
       const id = localStorage.getItem('userId')
       const token = localStorage.getItem('userToken')
-      if(confirmDeleteAccount == true){
-        console.log('userToken')
+      if(confirm("Voulez-vous supprimer votre compte ? Toutes vos informations seront effacées")){
         axios
         .delete('/api/user/' + id, {
           headers: {
@@ -83,12 +81,11 @@ export default {
           }
         })
         .then (()=>{
-          console.log('toto delete')
           localStorage.clear();
+          alert('Votre comtpe a bien été supprimé')
           this.$router.push("/")
         })
         .catch(error => {
-          console.log('tata delete')
           console.log(error)
         })
       }
@@ -102,22 +99,29 @@ export default {
   //Changer la description
     newDescription : function() {
       const id = localStorage.getItem('userId')
-      const token = localStorage.getItem('userToken')    
+      const token = localStorage.getItem('userToken')  
+      console.log('description',this.description)  
       if(this.descrition !== null){
         axios
-        .put('/api/user/' + id, {
+        .put('/api/user/' + id, 
+        {
+          description: this.description
+        },
+        {
           headers: {
             'Authorization': 'Bearer' + token
           }
         })
         .then(response =>{
+          console.log('toto put succed')
           console.log(response)
         })
         .catch(function (error){
+          console.log('toto put fail')
           console.log(error)
         })
       } else {
-        alert('la descrpition n\'a pas pu être enregistrée')
+        alert('Veuillez remplir le champ')
       }
     },
   },
@@ -127,14 +131,22 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "../scss/_variables_overrides.scss";
+
 #profil{
   .infoProfil, .publicationSection{
     padding-top: 1em;
     padding-bottom: 1em;
   }
 
-  router-link:hover{
-    text-decoration: none;
+  .btnNewPost:hover{
+    background-color: white;
+    color : $primary;
+
+      .linkNewPost:hover{
+        text-decoration: none;
+      }
   }
+
 }
 </style>
