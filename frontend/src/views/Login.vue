@@ -71,10 +71,9 @@ export default {
 
     methods: {
         createAccount: function () {
-            console.log('toto 1', this.userInfos)
+            console.log('toto', this.userInfos)
             if (this.userInfos.password === this.userInfos.confirmPassword)
             {
-                console.log('toto 2', this.userInfos)
                 axios
                 .post('/api/user/signup', this.userInfos )
                 .then(response=>{
@@ -95,8 +94,7 @@ export default {
                 .then(response => {
                     localStorage.setItem('userToken',response.data.token)
                     localStorage.setItem('userId',response.data.id)
-                    localStorage.setItem('userInfos', this.userInfos)
-                 //   console.log('test login',this.userInfos)
+                    localStorage.setItem('userInfos',this.userInfos)
                     this.$router.push("/profil")
                 })
                  .catch(function (error) {

@@ -112,7 +112,7 @@ exports.modifyUser = (req,res, next)=>{
 }
 
 //Supprimer un utilisateur
-exports.deleteUser = (req, res) => {
+exports.deleteUser = (req, res, next) => {
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
   const id = decodedToken.id;

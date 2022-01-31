@@ -55,10 +55,14 @@ export default {
     
     data() {
       return {
-        description :'',
+        userInfos: [],
+        token:'',
+        id:'',
         firstname: '',
         lastname: '',
-        userInfos: [],
+        password:'',
+        description :'',
+        
       }
     },
 
@@ -68,8 +72,8 @@ export default {
 
   methods: {
   //Récupérer les informations de l'utilisateur
-    getUserInfos(){
-       console.log('state get infos')
+    getUserInfos : function (){
+       console.log('get infos')
        const id = localStorage.getItem('userId')
        const token = localStorage.getItem('userToken')
        axios
@@ -79,13 +83,14 @@ export default {
         }
        })
        .then(response => {
-         console.log(response)
+        console.log(response)
         this.userInfos = response.data
        })
        .catch(error => {
          console.log(error); 
        });         
        },
+
   mounted(){
     console.log('mounted')
 		this.getUserInfos();

@@ -2,6 +2,26 @@ const Article = require('../models/article');
 const fs = require('fs');
 const connectDB = require('../connect/db');
 
+//Créer un article
+exports.createArticle = (req, res, next) => {
+  const {image, contenu, user_id} = req.body
+  console.log('createArticle')
+  if(req.body.image == null){
+    req.body.image = null
+  }else {
+    req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  }
+  connectDB.query('INSERT INTO article SET ?',{image: image, contenu: contenu, user_id: user_id}, (error, result)=>{
+    if(error){
+      console.log(error);
+    } else{
+      console.log(result)
+    }
+    res.send('Nouvelle piblication créée')
+});
+  
+};
+
 //Afficher tous les articles
 exports.getAllArticle = (req, res, next) => {
   connectDB.query('SELECT * FROM article', async (error, result) =>{
@@ -31,26 +51,6 @@ exports.getOneArticle = (req, res, next) => {
  //dbconnect
  });
 //getone
-};
-
-//Créer un article
-exports.createArticle = (req, res, next) => {
-  if(req.body.image == null){
-    req.body.image = null
-  }else {
-    req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  }
-  
-  const articleData = new Article(req.body);
-  if(req.body.constructor === Object && Object.keys(req.body).lenght === 0){
-    res.send(400).send({succes:false, message:'Merci de remplir au moins un champs'})
-  }else{
-    Article.createArticle(articleData,(err, article)=>{
-        if(err)
-          res.send(err);
-          res.json({status: true, message: 'Nouvelle publication créée !', data: article})   
-    })
-}
 };
 
 //Modifier un article

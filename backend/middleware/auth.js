@@ -4,18 +4,14 @@ console.log('auth')
 module.exports = (req, res, next) => {
   try {
 console.log('test auth');
-console.log('plop auth', req.headers.authorization );
-
     const token = req.headers.authorization.substr(6);
-console.log('plop token', token);
     const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
     const userId = decodedToken.id;
-console.log('plop userId', userId);
 
     if (req.body.id && req.body.id !== userId) {
       throw '403: unauthorized request';
     } else {
-      console.log('plop next', userId)
+      console.log('auth next', userId)
       next();
     }
   } catch {

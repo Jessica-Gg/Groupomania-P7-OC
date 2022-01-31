@@ -3,7 +3,6 @@
         <div class="card cardIndex shadow">
             <div class="card-header bg-white">
                 <h2 class="card-title text-center">Créer une nouvelle publication</h2>
-                <p class="card-title text-center">{{ moment().format("DD/MM/YYYY") }} </p>
             </div>
             <div class="card-body">
                 <form method="post" id="formulairePost">
@@ -28,17 +27,13 @@
 import axios from 'axios'
 import {mapState, mapActions} from 'vuex'
 
-var moment = require('moment')
-
 export default {
   name: 'Publications',
     data(){ 
         return{
-            moment:moment,
             postContent:{
                 image:'',
                 contenu:'',
-                uploadedFile: '',
             }
         }
     },
@@ -48,42 +43,41 @@ export default {
         infosUser(){
             return this.$store.state.user
         },
-
-        currentdate() {
-            const currentdate = new Date()
-            return currentdate 
-        }
     },
 
     methods: {
         ...mapActions(['getUserInfos']),
 
         publier() {
-            const fd = new FormData();
-            if((this.postContent.contenu !== null ) || (this.postContent.image !== null)){
-                fd.append('image', this.postContent.image)
-                fd.append('contenu', this.postContent.contenu)
-                fd.append('auteur', this.$store.user.lastname)
-            } else {
-                fd.append('contenu', this.postContent.contenu)
-                fd.append('auteur', this.$store.user.lastname)
+            const token = localStorage.getItem('userToken');
+            const userId = localStorage.getItem('userId')
+            console.log('token publier',token)
+            const userData = {
+                contenu: this.contenu,
+                image: this.image,
+                user_id: userId
             }
             axios
-            .post('/api/article', fd, {
+            .post('/api/posts/', userData, {
                 headers:{
-                     'Authorization': 'Bearer ' + localStorage.getItem('userInfo')
+                     'Authorization': 'Bearer ' + token
                 }
             })
             .then((response) => {
+                console.log('post test')
                 console.log(response)
+                this.$emit("Publications");
+                this.contenu = "";
+                this.image= "";
                 this.$router.push('/profil')
             })
             .catch(error => {
+                console.log('post test fail')
                 console.log(error)
             })
         },
 
-         uploadFile (event) {
+        uploadFile (event) {
             console.log(event)
             this.selectedFile = event.target.files[0]
             console.log(this.selectedFile.name)
@@ -99,13 +93,8 @@ export default {
     padding-right: 10em ;
 	display: flex;
     flex-direction: column;
-	justify-content: space-between;
 	
     .card-header{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-
         h2, h3{
             font-size: 1.5em;
         }

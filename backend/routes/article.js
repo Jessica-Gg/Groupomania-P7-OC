@@ -6,8 +6,8 @@ const multer = require('../middleware/multer-config');
 
 const articleCtrl = require('../controllers/article');
 
-router.get('/', auth, articleCtrl.getAllArticle);
 router.post('/', auth, multer, articleCtrl.createArticle);
+router.get('/', auth, articleCtrl.getAllArticle);
 router.get('/:id', auth, articleCtrl.getOneArticle);
 router.put('/:id', auth, multer, articleCtrl.modifyArticle);
 router.delete('/:id', auth, multer, articleCtrl.deleteArticle);
