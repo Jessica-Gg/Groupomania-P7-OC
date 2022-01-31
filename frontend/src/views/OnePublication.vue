@@ -10,9 +10,6 @@
                 <div></div>
             </div>
             <div class="card-footer bg-white"> 
-                <button type="button" class="btn btn-secondary btn-sm mb-3">
-                    <router-link class="linkNewPost" to="/post"><span class="font-weight-bold">Voir la publication</span></router-link>
-                </button>
                 <p>Commentaires (nb comments)</p>
                 <input type="text" placeholder="Ajouter un commentaire"/>
             </div>
@@ -65,11 +62,6 @@ export default {
             font-size: 1.5em;
         }
     }
-
-    .linkNewPost{
-        color: white,
-          
-      }
         
 }
 </style>

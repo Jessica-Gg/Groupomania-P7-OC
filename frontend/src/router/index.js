@@ -30,7 +30,14 @@ const routes = [
     path: '/newpost',
     name: 'NewPost',
     component: () => import('../views/NewPublication.vue')
+  },
+  {
+    path: '/post',
+    name: 'OnePost',
+    component: () => import('../views/OnePublication.vue')
   }
+
+
 ]
 
 const router = new VueRouter({

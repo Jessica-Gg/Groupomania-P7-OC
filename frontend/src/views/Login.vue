@@ -1,10 +1,8 @@
 <template>
 <div>
-      <div class="introduction" v-if="mode == 'connexion'">
-            <img alt="logo et nom de l'entreprise Groupomania" src="../assets/icon-name-blue.png"/>
-            <h1>Bienvenue sur votre réseau social d'entreprise !</h1>
-            <h2>Discutez avec vos collègues, rencontrez de nouvelles personnes</h2> 
-        </div>
+    <div class="introduction" v-if="mode == 'connexion'">
+        <Header/>
+    </div>
     <div class="login border rounded shadow-sm bg-light">
         <h1 class="title" v-if="mode == 'connexion'"> {{mode}}</h1>
         <h1 class="title" v-else>{{mode}}</h1>
@@ -46,8 +44,13 @@
 
 <script>
 import axios from 'axios';
+import Header from '@/components/Header.vue'
+
 export default {
     name: 'Login',
+    components: {
+        Header
+    },
     props: {
         mode: {
             type: String,

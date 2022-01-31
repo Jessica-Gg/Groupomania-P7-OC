@@ -1,9 +1,11 @@
 <template>
   <div class="hello">
-    <img alt="logo et nom de l'entreprise Groupomania" src="../assets/icon-name-blue.png"/>
-    <h1>Bienvenue sur votre réseau social d'entreprise !</h1>
+    <Header/>
     <h3>Publications</h3>
     <p id="textConnect"></p>
+    <button type="submit" class="btn btn-outline-primary mb-3 mt-3 btnNewPost">
+          <router-link class="linkNewPost" to="/newpost"><span class="font-weight-bold">Créer une nouvelle publication</span></router-link>
+    </button>
     <Publications/>
     <Footer/>
   </div>
@@ -17,29 +19,44 @@ if(userInfos === null ){
 
 import Publications from '@/components/Publications.vue'
 import Footer from '@/components/Footer.vue'
+import Header from '@/components/Header.vue'
 
 export default {
   name: 'Home',
   components: {
     Publications,
     Footer,
+    Header
   }
 }
 </script>
 
 <style scoped lang="scss">
+@import "../scss/_variables_overrides.scss";
 h3 {
   margin: 40px 0 0;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
+
+  li {
+    display: inline-block;
+    margin: 0 10px;
+  }
+
+  a {
+    color: #151325;
+  }
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #151325;
-}
+
+.btnNewPost:hover{
+    background-color: white;
+    color : $primary;
+
+      .linkNewPost:hover{
+        text-decoration: none;
+      }
+  }
 </style>

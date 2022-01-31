@@ -66,13 +66,16 @@ exports.login = (req, res, next) => {
 
 //Récupérer un seul utilisateur
 exports.getOneUser= (req, res, next) => { 
+  console.log('plip getOne')
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
   const id = decodedToken.id;
   connectDB.query('SELECT * FROM user WHERE id = ?', [id], async (error, result) =>{
    if(error){
+     console.log('plip getOn succed')
      console.log(error);
    }else{
+     console.log('plip getOne failed')
      console.log(result)
    }
    res.send('Utilisateur trouvé')
@@ -87,12 +90,6 @@ exports.modifyUser = (req,res, next)=>{
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
   const id = decodedToken.id;
   const newDescription = req.body.description;
-
-  if (req.body.description == "" ) {
-    return res
-      .status(400)
-      .json({ error: "Vous ne pouvez enregistrer une description vide" });
-  }
 
   connectDB.query('SELECT id FROM user WHERE id=?', [id], async(error, result) => {
     try {
@@ -123,7 +120,6 @@ exports.deleteUser = (req, res) => {
   connectDB.query('SELECT id FROM user WHERE id=?', [id], async(error, result) => {
     try {
       if (req.params.id == id) {
-        console.log('toto delete if')
         connectDB.query('DELETE FROM user WHERE id=?', [id], async(error, result) => {
           if(error){
             console.log(error);

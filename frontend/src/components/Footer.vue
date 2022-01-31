@@ -5,7 +5,7 @@
 </template>
 
 <script>
-export default{
+export default {
     name: 'Footer',
     data(){
         return {
@@ -15,7 +15,7 @@ export default{
       computed: {
         copyright() {
           const currentYear = new Date().getFullYear()
-          return `Copyright ${this.groupName} ${currentYear}`
+          return `Copyright ${this.groupName} © ${currentYear}`
         }
       }
     }

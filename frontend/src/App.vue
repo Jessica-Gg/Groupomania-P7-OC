@@ -4,7 +4,7 @@
       <router-link to="/">Accueil |</router-link>
       <router-link to="/about"> A propos |</router-link>
       <router-link to="/login"> Se connecter |</router-link>
-      <router-link to="/profil"> Mon Profil <v-icon name="regular/user"/></router-link>
+      <router-link to="/profil"> Mon Profil <v-icon class="icon" name="regular/user"/></router-link>
     </header>
     <router-view/>
   </div>
@@ -52,7 +52,7 @@ body {
     }
   }
   
-  v-icon{
+  .icon{
     color:#ffffff;
   }
 }

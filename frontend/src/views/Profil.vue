@@ -39,7 +39,7 @@
 <script>
 import Publications from '@/components/Publications.vue'
 import axios from 'axios'
-import {mapState, mapActions} from 'vuex'
+import {mapState, } from 'vuex'
 
 const userInfos = localStorage.getItem('userInfos')
 if(userInfos === null ){
@@ -58,6 +58,7 @@ export default {
         description :'',
         firstname: '',
         lastname: '',
+        userInfos: [],
       }
     },
 
@@ -66,9 +67,29 @@ export default {
     },
 
   methods: {
-  //Récupérer les infos de l'utilisateur
-    ...mapActions(['getUserInfos']),
-
+  //Récupérer les informations de l'utilisateur
+    getUserInfos(){
+       console.log('state get infos')
+       const id = localStorage.getItem('userId')
+       const token = localStorage.getItem('userToken')
+       axios
+       .get('/api/user/'+ id, {
+         headers:{
+             'Authorization': 'Bearer ' + token
+        }
+       })
+       .then(response => {
+         console.log(response)
+        this.userInfos = response.data
+       })
+       .catch(error => {
+         console.log(error); 
+       });         
+       },
+  mounted(){
+    console.log('mounted')
+		this.getUserInfos();
+  },
   //Supprimer le compte
     deleteAccount: function(){
       const id = localStorage.getItem('userId')
@@ -100,7 +121,7 @@ export default {
     newDescription : function() {
       const id = localStorage.getItem('userId')
       const token = localStorage.getItem('userToken')  
-      console.log('description',this.description)  
+    //  console.log('description',this.description)  
       if(this.descrition !== null){
         axios
         .put('/api/user/' + id, 
@@ -113,11 +134,9 @@ export default {
           }
         })
         .then(response =>{
-          console.log('toto put succed')
           console.log(response)
         })
         .catch(function (error){
-          console.log('toto put fail')
           console.log(error)
         })
       } else {

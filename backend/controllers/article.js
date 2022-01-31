@@ -1,30 +1,36 @@
 const Article = require('../models/article');
 const fs = require('fs');
-const {response} = require('express');
 const connectDB = require('../connect/db');
 
 //Afficher tous les articles
 exports.getAllArticle = (req, res, next) => {
-  Article.find()
-    .then(article => {
-      res.status(200).json(article);
-    })
-    .catch(error => {
-      res.status(400).json({error: error});
-    });
+  connectDB.query('SELECT * FROM article', async (error, result) =>{
+   if(error){
+     console.log(error);
+   }else{
+     console.log(result)
+   }
+   res.send('Articles trouvés')
+ //dbconnect
+ });
+//getall
 };
 
 //Afficher un article
 exports.getOneArticle = (req, res, next) => {
-  Article.findOne({_id: req.params.id})
-    .then(article => {
-      res.status(200).json(article);
-      })
-    .catch(error => {
-      res.status(404).json({
-        error: error
-      });
-    });
+  const token = req.headers.authorization.substr(6);
+  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+  const id = decodedToken.id;
+  connectDB.query('SELECT * FROM article WHERE id = ?', [id], async (error, result) =>{
+   if(error){
+     console.log(error);
+   }else{
+     console.log(result)
+   }
+   res.send('Article trouvé')
+ //dbconnect
+ });
+//getone
 };
 
 //Créer un article
