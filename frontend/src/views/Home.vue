@@ -27,7 +27,13 @@ export default {
     Publications,
     Footer,
     Header
+  },
+  data(){
+    return{
+      allArticles: []
   }
+  }
+  
 }
 </script>
 

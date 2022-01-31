@@ -1,13 +1,13 @@
 <template>
     <div class="m-3 publications_card" >
-        <div class="card cardIndex shadow"  >
+        <div class="card cardIndex shadow" v-for="article in allArticles" :key="article.id"  >
             <div class="card-header bg-white">
                 <h2 class="card-title text-center">{{ user.lastname }} {{ user.firstname }}</h2>
-                <p class="card-title text-center">{{ moment().format("DD/MM/YYYY") }}</p>
+                <p class="card-title text-center">{{ article.date }}</p>
             </div>
             <div class="card-body">
                 <div><img/></div>
-                <div></div>
+                <div>{{ article.content }}</div>
             </div>
             <div class="card-footer bg-white"> 
                 <button type="button" class="btn btn-secondary btn-sm mb-3">
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import {mapState, mapActions} from 'vuex'
 
 var moment = require('moment')
@@ -30,7 +31,11 @@ export default {
     data(){ 
         return{
             moment:moment,
-            index:true,
+            content: "",
+            date: "",
+            image: "",
+            allArticles: [],
+            userId : localStorage.getItem('userId'),
         }
     },
 
@@ -43,7 +48,26 @@ export default {
 
     methods: {
         ...mapActions(['getUserInfos'])
-    }
+    },
+
+        getAllArticles : function(){
+            const token = localStorage.getItem('userToken')
+            axios
+                .get('/api/posts/', {
+                    headers: {Authorization : 'Bearer' + token},
+                })
+                .then((response) => {
+                    this.allArticles = response.data
+                })
+               .catch(error => {
+                console.log('get all post fail')
+                console.log(error)
+            })
+        },
+
+        mounted(){
+            this.getAllArticles
+        }
 }
 </script>
 

@@ -60,7 +60,6 @@ export default {
         id:'',
         firstname: '',
         lastname: '',
-        password:'',
         description :'',
         
       }
@@ -72,28 +71,27 @@ export default {
 
   methods: {
   //Récupérer les informations de l'utilisateur
-    getUserInfos : function (){
-       console.log('get infos')
-       const id = localStorage.getItem('userId')
-       const token = localStorage.getItem('userToken')
-       axios
-       .get('/api/user/'+ id, {
-         headers:{
-             'Authorization': 'Bearer ' + token
-        }
-       })
-       .then(response => {
-        console.log(response)
-        this.userInfos = response.data
-       })
-       .catch(error => {
-         console.log(error); 
-       });         
-       },
+  // getUserInfos : function (){
+  //    console.log('get infos')
+  //    const id = localStorage.getItem('userId')
+  //    const token = localStorage.getItem('userToken')
+  //    axios
+  //    .get('/api/user/'+ id, {
+  //      headers:{
+  //          'Authorization': 'Bearer' + token
+  //     }
+  //    })
+  //    .then(response => {
+  //     console.log(response)
+  //     this.userInfos = response.data
+  //    })
+  //    .catch(error => {
+  //      console.log(error); 
+  //    });         
+  //    },
 
   mounted(){
-    console.log('mounted')
-		this.getUserInfos();
+		this.$store.dispatch('getUserInfos');
   },
   //Supprimer le compte
     deleteAccount: function(){

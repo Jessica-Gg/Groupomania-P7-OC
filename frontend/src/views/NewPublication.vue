@@ -8,11 +8,11 @@
                 <form method="post" id="formulairePost">
                     <div class="rowForm">
                         <label for='image' class="font-weight-bold">Partager une image : </label><br>
-                        <input id="image" type="file" name="image" accept="image/*"  placeholder="Télécharger un fichier" @click="uploadFile()"/>
+                        <input id="image" type="file" name="image" accept="image/*"  placeholder="Télécharger un fichier" @change="uploadFile"/>
                     </div>
                     <div class="rowForm mt-3">  
                         <label for="contenu" class="font-weight-bold">Partager un nouveau contenu :</label><br>
-                        <textarea v-model="postContent.contenu" id="contenu" class="textZone" placeholder="Quoi de neuf ?"></textarea>
+                        <textarea v-model="contenu" id="contenu" class="textZone" placeholder="Quoi de neuf ?"></textarea>
                     </div>
                     <button type="submit" class="btn btn-outline-primary ml-3 mt-1" @click="publier()">
                         <span class="font-weight-bold">Publier</span>
@@ -31,10 +31,9 @@ export default {
   name: 'Publications',
     data(){ 
         return{
-            postContent:{
-                image:'',
-                contenu:'',
-            }
+            image:'',
+            imageName:'',
+            contenu:'',
         }
     },
 
@@ -52,21 +51,22 @@ export default {
             const token = localStorage.getItem('userToken');
             const userId = localStorage.getItem('userId')
             console.log('token publier',token)
-            const userData = {
+           const userData = {
                 contenu: this.contenu,
                 image: this.image,
+                imageName: this.imageName,
                 user_id: userId
             }
             axios
             .post('/api/posts/', userData, {
                 headers:{
-                     'Authorization': 'Bearer ' + token
+                     'Authorization': 'Bearer' + token
                 }
             })
             .then((response) => {
                 console.log('post test')
                 console.log(response)
-                this.$emit("Publications");
+            //    this.$emit("Publications");
                 this.contenu = "";
                 this.image= "";
                 this.$router.push('/profil')
@@ -79,8 +79,9 @@ export default {
 
         uploadFile (event) {
             console.log(event)
-            this.selectedFile = event.target.files[0]
-            console.log(this.selectedFile.name)
+            this.image = event.target.files[0]
+            this.imageName = event.target.files[0]
+            console.log(this.image.name)
         },
     }
 }

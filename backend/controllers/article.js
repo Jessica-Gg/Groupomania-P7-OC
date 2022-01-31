@@ -11,7 +11,8 @@ exports.createArticle = (req, res, next) => {
   }else {
     req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   }
-  connectDB.query('INSERT INTO article SET ?',{image: image, contenu: contenu, user_id: user_id}, (error, result)=>{
+  const datePost = new Date()
+  connectDB.query('INSERT INTO article SET ?',{image: image, contenu: contenu, date: datePost, user_id: user_id}, (error, result)=>{
     if(error){
       console.log(error);
     } else{
@@ -41,7 +42,7 @@ exports.getOneArticle = (req, res, next) => {
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
   const id = decodedToken.id;
-  connectDB.query('SELECT * FROM article WHERE id = ?', [id], async (error, result) =>{
+  connectDB.query('SELECT * FROM article WHERE postId=?', [id], async (error, result) =>{
    if(error){
      console.log(error);
    }else{
@@ -67,14 +68,27 @@ exports.modifyArticle = (req, res, next) => {
 
 //Supprimer un article
 exports.deleteArticle = (req, res, next) => {
-  Article.findOne({id: req.params.id})
-    .then(Article => {
-      const filename = Article.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () => {
-          Article.deleteOne({id: req.params.id})
-            .then(() => res.status(200).json({message: 'Article supprimé avec succès !'}))
-            .catch(error => res.status(400).json({error}));
+  const token = req.headers.authorization.substr(6);
+  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+  const id = decodedToken.postId;
+
+  connectDB.query('SELECT id FROM article WHERE postId=?', [id], async(error, result) => {
+    try {
+      if (req.params.id == id) {
+        connectDB.query('DELETE FROM article WHERE postId=?', [id], async(error, result) => {
+          if(error){
+            console.log(error);
+          }else{
+            console.log(result)
+          }
+          res.send('Article supprimé')
       });
+      }
+  } catch { (error => {
+      res.status(400).json({error: error});
+      alert('Article non supprimé')
     })
-    .catch(error => res.status(500).json({error}));
+  }
+//dbconnect
+  })
 };
