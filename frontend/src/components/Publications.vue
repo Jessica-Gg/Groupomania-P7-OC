@@ -41,9 +41,11 @@ export default {
 
     computed:{
         ...mapState(['user']),
-    //    userInfos(){
-    //        return this.$store.state.user
-    //    }
+    },
+
+    mounted(){
+      this.$store.dispatch('getUserInfos');
+      this.getAllArticles();
     },
 
     methods: {
@@ -65,9 +67,6 @@ export default {
             })
         },
 
-        mounted(){
-            this.getAllArticles
-        }
 }
 </script>
 

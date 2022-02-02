@@ -5,16 +5,16 @@
                 <h2 class="card-title text-center">Créer une nouvelle publication</h2>
             </div>
             <div class="card-body">
-                <form method="post" id="formulairePost">
+                <form id="formulairePost">
                     <div class="rowForm">
                         <label for='image' class="font-weight-bold">Partager une image : </label><br>
-                        <input id="image" type="file" name="image" accept="image/*"  placeholder="Télécharger un fichier" @change="uploadFile"/>
+                        <input id="image" type="file" name="image" placeholder="Télécharger un fichier" @change="uploadFile"/>
                     </div>
                     <div class="rowForm mt-3">  
                         <label for="contenu" class="font-weight-bold">Partager un nouveau contenu :</label><br>
                         <textarea v-model="contenu" id="contenu" class="textZone" placeholder="Quoi de neuf ?"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-outline-primary ml-3 mt-1" @click="publier()">
+                    <button class="btn btn-outline-primary ml-3 mt-1" @click="publier()">
                         <span class="font-weight-bold">Publier</span>
                     </button>
                 </form>
@@ -50,37 +50,37 @@ export default {
         publier() {
             const token = localStorage.getItem('userToken');
             const userId = localStorage.getItem('userId')
-            console.log('token publier',token)
-           const userData = {
+            console.log(this.imageName)
+            const userData = {
                 contenu: this.contenu,
+                filename: this.imageName,
                 image: this.image,
-                imageName: this.imageName,
                 user_id: userId
             }
-            axios
-            .post('/api/posts/', userData, {
-                headers:{
-                     'Authorization': 'Bearer' + token
-                }
-            })
-            .then((response) => {
-                console.log('post test')
-                console.log(response)
-            //    this.$emit("Publications");
-                this.contenu = "";
-                this.image= "";
-                this.$router.push('/profil')
-            })
-            .catch(error => {
-                console.log('post test fail')
-                console.log(error)
-            })
+            console.log(userData)
+
+        axios
+        .post('/api/posts/', userData, {
+            headers:{
+                 'Authorization': 'Bearer' + token
+            }
+        })
+        .then((response) => {
+            console.log('post test')
+            console.log(response)
+        //    this.$emit("Publications");
+            this.$router.push('/profil')
+        })
+        .catch(error => {
+            console.log('post test fail')
+            console.log(error)
+        })
         },
 
         uploadFile (event) {
             console.log(event)
             this.image = event.target.files[0]
-            this.imageName = event.target.files[0]
+            this.imageName = event.target.files[0].name
             console.log(this.image.name)
         },
     }

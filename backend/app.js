@@ -33,9 +33,9 @@ app.use('/posts', articleRoutes);
 app.use('/comment', commentRoutes);
 
 //Tests de routes via Postman
-app.get('/', function(req, res) {
-  res.send('hello world');
-});
+//pp.get('/', function(req, res) {
+// res.send('hello world');
+//);
 
 module.exports = app;
 

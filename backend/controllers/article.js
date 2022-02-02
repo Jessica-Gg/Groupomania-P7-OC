@@ -6,6 +6,7 @@ const connectDB = require('../connect/db');
 exports.createArticle = (req, res, next) => {
   const {image, contenu, user_id} = req.body
   console.log('createArticle')
+  console.log('body',req.body)
   if(req.body.image == null){
     req.body.image = null
   }else {
@@ -18,7 +19,7 @@ exports.createArticle = (req, res, next) => {
     } else{
       console.log(result)
     }
-    res.send('Nouvelle piblication créée')
+    res.send('Nouvelle publication créée')
 });
   
 };
@@ -30,8 +31,8 @@ exports.getAllArticle = (req, res, next) => {
      console.log(error);
    }else{
      console.log(result)
+     res.send(result)
    }
-   res.send('Articles trouvés')
  //dbconnect
  });
 //getall
@@ -42,7 +43,7 @@ exports.getOneArticle = (req, res, next) => {
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
   const id = decodedToken.id;
-  connectDB.query('SELECT * FROM article WHERE postId=?', [id], async (error, result) =>{
+  connectDB.query('SELECT * FROM article WHERE id=?', [id], async (error, result) =>{
    if(error){
      console.log(error);
    }else{
@@ -70,12 +71,12 @@ exports.modifyArticle = (req, res, next) => {
 exports.deleteArticle = (req, res, next) => {
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-  const id = decodedToken.postId;
+  const id = decodedToken.id;
 
-  connectDB.query('SELECT id FROM article WHERE postId=?', [id], async(error, result) => {
+  connectDB.query('SELECT id FROM article WHERE id=?', [id], async(error, result) => {
     try {
       if (req.params.id == id) {
-        connectDB.query('DELETE FROM article WHERE postId=?', [id], async(error, result) => {
+        connectDB.query('DELETE FROM article WHERE id=?', [id], async(error, result) => {
           if(error){
             console.log(error);
           }else{

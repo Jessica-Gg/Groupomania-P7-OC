@@ -5,22 +5,25 @@
         <div class="m-3 publications_card">
           <div class="card cardIndex shadow">
             <div class="card-header bg-white">
-              <h2 class="card-title text-center text-info">{{ user.lastname }} {{ user.firstname }}</h2>
+              <h2 class="card-title text-info">{{ user.lastname }} {{ user.firstname }}</h2>
             </div>
             <div class="card-body" id="description">
-              <form>
-              <label for="changeDescription" class="font-weight-bold">Présentation : </label><br>
-              <p>{{ user.description }} {{ description }}</p>
-              <input id="changeDescription" type="text" v-model="description" placeholder="Entrez une description">
-              <button type="submit" class="btn btn-outline-dark ml-3 mt-1" @click="newDescription()">Enregistrer</button>
-              </form>
+              <p class="font-weight-bold">Présentation : </p><p>{{ user.description }}</p>
+              <button type="submit" v-if="mode=='read'" class="btn btn-sm btn-outline-dark mt-1" @click="modifyDescription()">
+                <span class="font-weight-bold">Modifier la description</span>
+              </button> 
+              <div v-if="mode=='modify'" >
+                <textarea v-model="description" id="changeDescription" class="textZone" placeholder="Nouvelle description"></textarea><br>
+                <button type="submit" class="btn btn-sm btn-outline-dark ml-3 mt-1" @click="newDescription()">Enregistrer</button>
+                 <button type="submit" class="btn btn-sm btn-outline-dark ml-3 mt-1" @click="switchToRead()">Annuler</button>
+              </div>
             </div>
             <div class="card-footer bg-white">
-              <button type="submit" class="btn btn-outline-dark mt-1" @click="deconnectAccount()">
+              <button type="submit" class="btn btn-sm btn-outline-dark mt-1" @click="deconnectAccount()">
                 <span class="font-weight-bold">Se déconnecter</span>
               </button> 
-              <button type="submit" class="btn btn-outline-danger ml-3 mt-1" @click="deleteAccount()">
-                <span class="font-weight-bold">Supprimer mon compte</span>
+              <button type="submit" class="btn btn-sm btn-outline-danger ml-3 mt-1" @click="deleteAccount()">
+                <span class="font-weight-bold">Supprimer mon compte <v-icon class="icon" name="regular/trash-alt"/></span>
               </button>
             </div>
           </div>
@@ -41,6 +44,7 @@ import Publications from '@/components/Publications.vue'
 import axios from 'axios'
 import {mapState, } from 'vuex'
 
+//Si l'utilisateur n'est pas connecté, il est renvoyé à la page de connexion
 const userInfos = localStorage.getItem('userInfos')
 if(userInfos === null ){
   alert('Vous n\'êtes pas identifié')
@@ -55,13 +59,12 @@ export default {
     
     data() {
       return {
-        userInfos: [],
         token:'',
         id:'',
         firstname: '',
         lastname: '',
-        description :'',
-        
+        description :'', 
+        mode: 'read'     
       }
     },
 
@@ -70,29 +73,14 @@ export default {
     },
 
   methods: {
-  //Récupérer les informations de l'utilisateur
-  // getUserInfos : function (){
-  //    console.log('get infos')
-  //    const id = localStorage.getItem('userId')
-  //    const token = localStorage.getItem('userToken')
-  //    axios
-  //    .get('/api/user/'+ id, {
-  //      headers:{
-  //          'Authorization': 'Bearer' + token
-  //     }
-  //    })
-  //    .then(response => {
-  //     console.log(response)
-  //     this.userInfos = response.data
-  //    })
-  //    .catch(error => {
-  //      console.log(error); 
-  //    });         
-  //    },
-
-  mounted(){
-		this.$store.dispatch('getUserInfos');
-  },
+  //Passer en mode modification du compte
+    modifyDescription(){
+      this.mode = 'modify'
+    },
+  //Changer de mode pour afficher le profil
+    switchToRead(){
+      this.mode = 'read'
+    },
   //Supprimer le compte
     deleteAccount: function(){
       const id = localStorage.getItem('userId')
@@ -119,12 +107,10 @@ export default {
       localStorage.clear()
       this.$router.push("/login?mode=connexion")
     },
-
   //Changer la description
     newDescription : function() {
       const id = localStorage.getItem('userId')
       const token = localStorage.getItem('userToken')  
-    //  console.log('description',this.description)  
       if(this.descrition !== null){
         axios
         .put('/api/user/' + id, 
@@ -137,7 +123,9 @@ export default {
           }
         })
         .then(response =>{
-          console.log(response)
+          console.log(response);
+          this.switchToRead();
+          location.reload();    
         })
         .catch(function (error){
           console.log(error)
@@ -146,10 +134,14 @@ export default {
         alert('Veuillez remplir le champ')
       }
     },
+  //fin methods
   },
-
+  //Chargement de la fonction qui fait l'appel à l'API pour récupérer les informations de l'utilisateur
+  mounted(){
+      this.$store.dispatch('getUserInfos');
+    },
+//fin export
 }
-
 </script>
 
 <style scoped lang="scss">
@@ -168,6 +160,13 @@ export default {
       .linkNewPost:hover{
         text-decoration: none;
       }
+  }
+
+  .card-header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 1.5em
   }
 
 }

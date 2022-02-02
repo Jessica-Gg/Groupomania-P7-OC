@@ -1,42 +1,50 @@
 const Comment = require('../models/comment');
 const fs = require('fs');
-const {response} = require('express');
 
 //Afficher tous les commentaires
 exports.getAllComment = (req, res, next) => {
-    Comment.find()
-    .then(comment => {
-      res.status(200).json(comment);
-    })
-    .catch(error => {
-      res.status(400).json({error: error});
-    });
-};
+  connectDB.query('SELECT * FROM commentaire', async (error, result) =>{
+    if(error){
+      console.log(error);
+    }else{
+      console.log(result)
+    }
+    res.send('Commentaires trouvés')
+  //dbconnect
+  });
+ //getall
+ };
 
 //Afficher un commentaire
 exports.getOneComment = (req, res, next) => {
-    Comment.findOne({_id: req.params.id})
-    .then(comment => {
-      res.status(200).json(comment);
-      })
-    .catch(error => {
-      res.status(404).json({
-        error: error
-      });
-    });
+  const token = req.headers.authorization.substr(6);
+  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+  const id = decodedToken.id;
+  connectDB.query('SELECT * FROM commentaire WHERE id=?', [id], async (error, result) =>{
+   if(error){
+     console.log(error);
+   }else{
+     console.log(result)
+   }
+   res.send('Commentiare trouvé')
+ //dbconnect
+ });
+//getone
 };
 
 //Créer un article
 exports.createComment = (req, res, next) => {
-  const commentObject = JSON.parse(req.body.comment);
-  delete commentObject._id;
-  const newComment = new Comment({
-    ...commentObject,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  });
-    newComment.save()
-      .then(() => res.status(201).json({message: 'Commentaire enregistré avec succès !'}))
-      .catch(error => res.status(400).json({error}));
+  const {contenu, user_id, article_id} = req.body
+  const datePost = new Date()
+  connectDB.query('INSERT INTO commentaire SET ?',{contenu: contenu, date: datePost, user_id: user_id, article_id: article_id}, (error, result)=>{
+    if(error){
+      console.log(error);
+    } else{
+      console.log(result)
+    }
+    res.send('Nouveau commenaire créé')
+});
+  
 };
 
 //Modifier un article
@@ -53,14 +61,27 @@ exports.modifyComment = (req, res, next) => {
 
 //Supprimer un commentaire
 exports.deleteComment = (req, res, next) => {
-    Comment.findOne({_id: req.params.id})
-    .then(Comment => {
-      const filename = Comment.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () => {
-        Comment.deleteOne({_id: req.params.id})
-            .then(() => res.status(200).json({message: 'Commentaire supprimé avec succès !'}))
-            .catch(error => res.status(400).json({error}));
+  const token = req.headers.authorization.substr(6);
+  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+  const id = decodedToken.id;
+
+  connectDB.query('SELECT id FROM commentaire WHERE id=?', [id], async(error, result) => {
+    try {
+      if (req.params.id == id) {
+        connectDB.query('DELETE FROM commentaire WHERE id=?', [id], async(error, result) => {
+          if(error){
+            console.log(error);
+          }else{
+            console.log(result)
+          }
+          res.send('Commentaire supprimé')
       });
+      }
+  } catch { (error => {
+      res.status(400).json({error: error});
+      alert('Commentaire non supprimé')
     })
-    .catch(error => res.status(500).json({error}));
+  }
+//dbconnect
+  })
 };

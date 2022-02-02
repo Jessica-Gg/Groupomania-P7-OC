@@ -87,6 +87,7 @@ export default {
                alert('Les mots de passe ne concordent pas')
             }
         },
+        
         login: function() {
             if((this.userInfos.email !== null) && (this.userInfos.password !== null)){
                 axios

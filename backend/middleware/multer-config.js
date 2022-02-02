@@ -1,4 +1,5 @@
 const multer = require('multer');
+console.log('multer in')
 
 //Dictionnaire des extensions de fichier
 const MIME_TYPES = {

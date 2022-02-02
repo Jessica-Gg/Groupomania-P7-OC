@@ -66,19 +66,16 @@ exports.login = (req, res, next) => {
 
 //Récupérer un seul utilisateur
 exports.getOneUser= (req, res, next) => { 
-  console.log('plip getOne')
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
   const id = decodedToken.id;
   connectDB.query('SELECT * FROM user WHERE id = ?', [id], async (error, result) =>{
    if(error){
-     console.log('plip getOn succed')
      console.log(error);
    }else{
-     console.log('plip getOne failed')
      console.log(result)
+     res.send(result)
    }
-   res.send('Utilisateur trouvé')
  //dbconnect
  });
 //getone
