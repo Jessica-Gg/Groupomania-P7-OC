@@ -8,7 +8,7 @@
                 <form id="formulairePost">
                     <div class="rowForm">
                         <label for='image' class="font-weight-bold">Partager une image : </label><br>
-                        <input id="image" type="file" name="image" placeholder="Télécharger un fichier" @change="uploadFile"/>
+                        <input id="image" type="file" name="image" placeholder="Télécharger un fichier" @change="prepareFile"/>
                     </div>
                     <div class="rowForm mt-3">  
                         <label for="contenu" class="font-weight-bold">Partager un nouveau contenu :</label><br>
@@ -51,25 +51,28 @@ export default {
             const token = localStorage.getItem('userToken');
             const userId = localStorage.getItem('userId')
             console.log(this.imageName)
-            const userData = {
-                contenu: this.contenu,
-                filename: this.imageName,
-                image: this.image,
-                user_id: userId
-            }
+            let userData = new FormData();
+            
+            userData.append("contenu", this.contenu);
+            userData.append("filename", this.imageName);
+            userData.append("imageUrl", this.image);
+            userData.append("user_id", userId);
+            
             console.log(userData)
+
 
         axios
         .post('/api/posts/', userData, {
             headers:{
-                 'Authorization': 'Bearer' + token
+                 'Authorization': 'Bearer' + token,
+                 'Content-Type': 'multipart/form-data'
             }
         })
         .then((response) => {
             console.log('post test')
             console.log(response)
         //    this.$emit("Publications");
-            this.$router.push('/profil')
+        //    this.$router.push('/profil')
         })
         .catch(error => {
             console.log('post test fail')
@@ -77,8 +80,8 @@ export default {
         })
         },
 
-        uploadFile (event) {
-            console.log(event)
+        prepareFile (event) {
+            console.log('event',event)
             this.image = event.target.files[0]
             this.imageName = event.target.files[0].name
             console.log(this.image.name)

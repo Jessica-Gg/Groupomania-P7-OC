@@ -45,7 +45,7 @@ export default {
 
     mounted(){
       this.$store.dispatch('getUserInfos');
-      this.getAllArticles();
+    //  this.getAllArticles();
     },
 
     methods: {

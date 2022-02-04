@@ -4,16 +4,17 @@ const connectDB = require('../connect/db');
 
 //Créer un article
 exports.createArticle = (req, res, next) => {
-  const {image, contenu, user_id} = req.body
+  const {contenu, user_id} = req.body
+  let image;
   console.log('createArticle')
   console.log('body',req.body)
-  if(req.body.image == null){
-    req.body.image = null
-  }else {
-    req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  }
+ if(req.file == null){
+   image = null
+ }else {
+   image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+ }
   const datePost = new Date()
-  connectDB.query('INSERT INTO article SET ?',{image: image, contenu: contenu, date: datePost, user_id: user_id}, (error, result)=>{
+  connectDB.query('INSERT INTO article SET ?',{imageUrl: image, contenu: contenu, date: datePost, user_id: user_id}, (error, result)=>{
     if(error){
       console.log(error);
     } else{
