@@ -1,15 +1,15 @@
 const Comment = require('../models/comment');
-const fs = require('fs');
+const connectDB = require('../connect/db');
 
 //Afficher tous les commentaires
 exports.getAllComment = (req, res, next) => {
-  connectDB.query('SELECT * FROM commentaire', async (error, result) =>{
+  connectDB.query('SELECT * FROM commentaire JOIN user ON commentaire.user_id = user.id ORDER BY date DESC', async (error, result) =>{
     if(error){
       console.log(error);
     }else{
       console.log(result)
-    }
-    res.send('Commentaires trouvés')
+      res.send(result)
+    }   
   //dbconnect
   });
  //getall
@@ -17,16 +17,14 @@ exports.getAllComment = (req, res, next) => {
 
 //Afficher un commentaire
 exports.getOneComment = (req, res, next) => {
-  const token = req.headers.authorization.substr(6);
-  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-  const id = decodedToken.id;
+  const id = req.params.id;
   connectDB.query('SELECT * FROM commentaire WHERE id=?', [id], async (error, result) =>{
    if(error){
      console.log(error);
    }else{
      console.log(result)
    }
-   res.send('Commentiare trouvé')
+   res.send('Commentaire trouvé')
  //dbconnect
  });
 //getone
@@ -35,8 +33,9 @@ exports.getOneComment = (req, res, next) => {
 //Créer un article
 exports.createComment = (req, res, next) => {
   const {contenu, user_id, article_id} = req.body
+  console.log('create comment')
   const datePost = new Date()
-  connectDB.query('INSERT INTO commentaire SET ?',{contenu: contenu, date: datePost, user_id: user_id, article_id: article_id}, (error, result)=>{
+  connectDB.query('INSERT INTO commentaire SET ?',{date: datePost, contenu: contenu, user_id: user_id, article_id: article_id}, (error, result)=>{
     if(error){
       console.log(error);
     } else{

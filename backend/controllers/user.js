@@ -64,7 +64,7 @@ exports.login = (req, res, next) => {
   }  
 }
 
-//Récupérer un seul utilisateur
+//Récupérer un'e seul'e utilisateur'ice
 exports.getOneUser= (req, res, next) => { 
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
@@ -81,7 +81,21 @@ exports.getOneUser= (req, res, next) => {
 //getone
 };
 
-//Modifier un utilisateur
+//Afficher toustes les utilisateur'ices
+exports.getAllUser = (req, res, next) => {
+  connectDB.query('SELECT * FROM user ', async (error, result) =>{
+   if(error){
+     console.log(error);
+   }else{
+    // console.log(result)
+     res.send(result)
+   }
+ //dbconnect
+ });
+//getall
+};
+
+//Modifier un'e utilisateur'ice
 exports.modifyUser = (req,res, next)=>{
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
@@ -108,7 +122,7 @@ exports.modifyUser = (req,res, next)=>{
 //modify
 }
 
-//Supprimer un utilisateur
+//Supprimer un'e utilisateur'ice
 exports.deleteUser = (req, res, next) => {
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");

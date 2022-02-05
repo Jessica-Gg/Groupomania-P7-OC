@@ -3,7 +3,7 @@
         <div class="card cardIndex shadow"  >
             <div class="card-header bg-white">
                 <h2 class="card-title text-center">{{ user.lastname }} {{ user.firstname }}</h2>
-                <p class="card-title text-center">{{ moment().format("DD/MM/YYYY") }}</p>
+                <p class="card-title text-center">{{ moment(article.date).format("DD/MM/YYYY") }}</p>
             </div>
             <div class="card-body">
                 <div><img/></div>
@@ -19,6 +19,8 @@
 
 <script>
 import {mapState, mapActions} from 'vuex'
+import axios from 'axios';
+
 
 var moment = require('moment')
 
@@ -27,15 +29,28 @@ export default {
     data(){ 
         return{
             moment:moment,
-            index:true,
+            articleData: [],
         }
     },
 
     computed:{
         ...mapState(['user']),
-    //    userInfos(){
-    //        return this.$store.state.user
-    //    }
+    },
+
+    mounted(){
+        const token = localStorage.getItem('userToken')
+        const id = localStorage.getItem('postId')
+            axios
+                .get('/api/posts/'+ id, {
+                    headers: {Authorization : 'Bearer' + token},
+                })
+                .then((response) => {
+                    this.articleData = response.data
+                })
+               .catch(error => {
+                console.log('get post fail')
+                console.log(error)
+            })
     },
 
     methods: {

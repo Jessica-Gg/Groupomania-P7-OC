@@ -35,7 +35,12 @@ const routes = [
     path: '/post',
     name: 'OnePost',
     component: () => import('../views/OnePublication.vue')
-  }
+  },
+  {
+    path: '/allusers',
+    name: 'AllUsers',
+    component: () => import('../views/AllUsers.vue')
+  },
 
 
 ]

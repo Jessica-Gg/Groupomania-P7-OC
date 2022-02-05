@@ -1,37 +1,37 @@
 const Article = require('../models/article');
-const fs = require('fs');
 const connectDB = require('../connect/db');
+const jwt = require('jsonwebtoken');
+
 
 //Créer un article
 exports.createArticle = (req, res, next) => {
   const {contenu, user_id} = req.body
   let image;
-  console.log('createArticle')
-  console.log('body',req.body)
  if(req.file == null){
    image = null
  }else {
    image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
  }
   const datePost = new Date()
-  connectDB.query('INSERT INTO article SET ?',{imageUrl: image, contenu: contenu, date: datePost, user_id: user_id}, (error, result)=>{
+  connectDB.query('INSERT INTO article SET ?',{image: image, contenu: contenu, date: datePost, user_id: user_id}, (error, result)=>{
     if(error){
       console.log(error);
     } else{
       console.log(result)
+      res.send(result)
     }
-    res.send('Nouvelle publication créée')
+    //res.send('Nouvelle publication créée')
 });
   
 };
 
 //Afficher tous les articles
 exports.getAllArticle = (req, res, next) => {
-  connectDB.query('SELECT * FROM article', async (error, result) =>{
+  connectDB.query('SELECT * FROM article JOIN user ON article.user_id = user.id ORDER BY date DESC', async (error, result) =>{
    if(error){
      console.log(error);
    }else{
-     console.log(result)
+    // console.log(result)
      res.send(result)
    }
  //dbconnect
@@ -41,9 +41,7 @@ exports.getAllArticle = (req, res, next) => {
 
 //Afficher un article
 exports.getOneArticle = (req, res, next) => {
-  const token = req.headers.authorization.substr(6);
-  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-  const id = decodedToken.id;
+  const id = req.params.id;
   connectDB.query('SELECT * FROM article WHERE id=?', [id], async (error, result) =>{
    if(error){
      console.log(error);
@@ -70,18 +68,23 @@ exports.modifyArticle = (req, res, next) => {
 
 //Supprimer un article
 exports.deleteArticle = (req, res, next) => {
-  const token = req.headers.authorization.substr(6);
-  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-  const id = decodedToken.id;
+  const postId = req.params.id;
 
-  connectDB.query('SELECT id FROM article WHERE id=?', [id], async(error, result) => {
+  connectDB.query('SELECT id FROM article WHERE id=?', [postId], async(error, result) => {
     try {
-      if (req.params.id == id) {
-        connectDB.query('DELETE FROM article WHERE id=?', [id], async(error, result) => {
+      if (req.params.id == postId) {
+        connectDB.query('DELETE FROM article WHERE id=?', [postId], async(error, result) => {
           if(error){
             console.log(error);
           }else{
             console.log(result)
+            connectDB.query('DELETE FROM commentaire WHERE article_id=?', [postId], async(error, result) => {
+              if(error){
+                console.log(error);
+              }else{
+                console.log(result)
+              }}
+            );
           }
           res.send('Article supprimé')
       });

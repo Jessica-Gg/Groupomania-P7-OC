@@ -15,7 +15,7 @@
               <div v-if="mode=='modify'" >
                 <textarea v-model="description" id="changeDescription" class="textZone" placeholder="Nouvelle description"></textarea><br>
                 <button type="submit" class="btn btn-sm btn-outline-dark ml-3 mt-1" @click="newDescription()">Enregistrer</button>
-                 <button type="submit" class="btn btn-sm btn-outline-dark ml-3 mt-1" @click="switchToRead()">Annuler</button>
+                <button type="submit" class="btn btn-sm btn-outline-dark ml-3 mt-1" @click="switchToRead()">Annuler</button>
               </div>
             </div>
             <div class="card-footer bg-white">
@@ -29,18 +29,13 @@
           </div>
         </div>
     </div>
-    <div class="publicationSection">
-      <h2>Mes publications</h2>
         <button type="submit" class="btn btn-outline-primary mb-3 mt-3 btnNewPost">
           <router-link class="linkNewPost" to="/newpost"><span class="font-weight-bold">Créer une nouvelle publication</span></router-link>
-        </button>
-        <Publications/>
-    </div>  
+        </button> 
   </div>
 </template>
 
 <script>
-import Publications from '@/components/Publications.vue'
 import axios from 'axios'
 import {mapState, } from 'vuex'
 
@@ -53,9 +48,6 @@ if(userInfos === null ){
 
 export default {
   name: 'Profil',
-  components: {
-    Publications
-  },
     
     data() {
       return {
@@ -64,7 +56,8 @@ export default {
         firstname: '',
         lastname: '',
         description :'', 
-        mode: 'read'     
+        mode: 'read',
+        admin:"",    
       }
     },
 
@@ -148,7 +141,7 @@ export default {
 @import "../scss/_variables_overrides.scss";
 
 #profil{
-  .infoProfil, .publicationSection{
+  .infoProfil{
     padding-top: 1em;
     padding-bottom: 1em;
   }
@@ -162,12 +155,17 @@ export default {
       }
   }
 
-  .card-header{
+ .card-header{
     display: flex;
     flex-direction: column;
     justify-content: center;
     font-size: 1.5em
   }
+  
+  #description{
+    font-size: 1.5em;
+  }
+ 
 
 }
 </style>

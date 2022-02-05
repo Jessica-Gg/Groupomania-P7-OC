@@ -1,6 +1,9 @@
 <template>
   <div class="hello">
     <Header/>
+    <button type="button" class="btn btn-sm btn-outline-light mb-3 mt-3 btnListUser">
+        <router-link class="listUsers" to="/allusers"><span class="font-weight-bold">Voir la liste des personnes inscrites</span></router-link>
+    </button>
     <h3>Publications</h3>
     <p id="textConnect"></p>
     <button type="submit" class="btn btn-outline-primary mb-3 mt-3 btnNewPost">
@@ -26,7 +29,7 @@ export default {
   components: {
     Publications,
     Footer,
-    Header
+    Header,
   },
   data(){
     return{

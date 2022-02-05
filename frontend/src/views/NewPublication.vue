@@ -8,7 +8,7 @@
                 <form id="formulairePost">
                     <div class="rowForm">
                         <label for='image' class="font-weight-bold">Partager une image : </label><br>
-                        <input id="image" type="file" name="image" placeholder="Télécharger un fichier" @change="prepareFile"/>
+                        <input id="image" type="file" name="image" @change="prepareFile"/>
                     </div>
                     <div class="rowForm mt-3">  
                         <label for="contenu" class="font-weight-bold">Partager un nouveau contenu :</label><br>
@@ -52,14 +52,17 @@ export default {
             const userId = localStorage.getItem('userId')
             console.log(this.imageName)
             let userData = new FormData();
-            
-            userData.append("contenu", this.contenu);
-            userData.append("filename", this.imageName);
-            userData.append("imageUrl", this.image);
-            userData.append("user_id", userId);
+            if (this.image == null) {
+                userData.append("contenu", this.contenu);
+                userData.append("user_id", userId);
+            }else {
+                userData.append("contenu", this.contenu);
+                userData.append("filename", this.imageName);
+                userData.append("image", this.image);
+                userData.append("user_id", userId);
+            }
             
             console.log(userData)
-
 
         axios
         .post('/api/posts/', userData, {
@@ -69,13 +72,10 @@ export default {
             }
         })
         .then((response) => {
-            console.log('post test')
             console.log(response)
-        //    this.$emit("Publications");
-        //    this.$router.push('/profil')
+            this.$router.push("/")
         })
         .catch(error => {
-            console.log('post test fail')
             console.log(error)
         })
         },
