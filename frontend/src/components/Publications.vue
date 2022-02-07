@@ -34,7 +34,7 @@
                         </button>
                         <div class="comment">
     <!-- Afficher/Masquer les commentaires -->
-                            <button type="button"  @click="seeComments(article.id)" class="btn btn-sm btn-outline-info ml-3 mt-1">
+                            <button type="button" @click="seeComments(article.id)" class="btn btn-sm btn-outline-info ml-3 mt-1">
                                 <span>Voir les commentaires</span>
                             </button>
                             <div>
@@ -44,7 +44,7 @@
                             </div>
 
     <!-- Affichage des commentaires en fonction de l'article  article.id == commentaire.article_id"-->
-                            <div v-if="mode=='seeComments' ">
+                            <div v-if="mode=='seeComments' && article.id == article_id">
                                 <div v-if="allComments == ''">
                                     <p>Aucun commentaire à afficher</p>
                                 </div>
@@ -83,7 +83,7 @@ var moment = require('moment')
 
 export default {
   name: 'Publications',
-    data(){ 
+    data : function(){ 
         return{
             moment:moment,
             contenu: '',
@@ -171,6 +171,24 @@ export default {
                 })
             }
          },
+
+    //Supprimer un commentaire
+        deleteComment: function(id){
+            console.log(id)
+            const token = localStorage.getItem('userToken')
+            if(confirm("Voulez-vous supprimer ce commentaire ?")){
+                axios
+                .delete('/api/comment/' + id, {
+                    headers: { 'Authorization': 'Bearer' + token }
+                })
+                .then (()=>{
+                   location.reload()
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+            }
+        },
 
     //Afficher les commentaires
         seeComments(id) {

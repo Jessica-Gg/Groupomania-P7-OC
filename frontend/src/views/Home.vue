@@ -10,7 +10,6 @@
     </div>
     
     <h3>Publications</h3>
-    <p id="textConnect"></p>
     <button type="submit" class="btn btn-outline-primary mb-3 mt-3 btnNewPost">
           <router-link class="linkNewPost" to="/newpost"><span class="font-weight-bold">Créer une nouvelle publication</span></router-link>
     </button>

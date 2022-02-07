@@ -70,10 +70,12 @@ export default {
     modifyDescription(){
       this.mode = 'modify'
     },
+
   //Changer de mode pour afficher le profil
     switchToRead(){
       this.mode = 'read'
     },
+
   //Supprimer le compte
     deleteAccount: function(){
       const id = localStorage.getItem('userId')
@@ -95,11 +97,13 @@ export default {
         })
       }
     },
+
   //Se déconnecter
     deconnectAccount() {
       localStorage.clear()
       this.$router.push("/login?mode=connexion")
     },
+
   //Changer la description
     newDescription : function() {
       const id = localStorage.getItem('userId')
@@ -127,12 +131,15 @@ export default {
         alert('Veuillez remplir le champ')
       }
     },
+    
   //fin methods
   },
+
   //Chargement de la fonction qui fait l'appel à l'API pour récupérer les informations de l'utilisateur
   mounted(){
       this.$store.dispatch('getUserInfos');
     },
+
 //fin export
 }
 </script>
