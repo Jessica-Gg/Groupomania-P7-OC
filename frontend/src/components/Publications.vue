@@ -44,7 +44,7 @@
                             </div>
 
     <!-- Affichage des commentaires en fonction de l'article  article.id == commentaire.article_id"-->
-                            <div v-if="mode=='seeComments' && article.id == article_id">
+                            <div v-if="mode=='seeComments'">
                                 <div v-if="allComments == ''">
                                     <p>Aucun commentaire à afficher</p>
                                 </div>
