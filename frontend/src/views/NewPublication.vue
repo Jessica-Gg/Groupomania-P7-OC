@@ -14,7 +14,7 @@
                         <label for="contenu" class="font-weight-bold">Partager un nouveau contenu :</label><br>
                         <textarea v-model="contenu" id="contenu" class="textZone" placeholder="Quoi de neuf ?"></textarea>
                     </div>
-                    <button class="btn btn-outline-primary ml-3 mt-1" @click="publier()">
+                    <button class="btn btn-outline-primary ml-3 mt-1" @click.prevent="publier()">
                         <span class="font-weight-bold">Publier</span>
                     </button>
                 </form>
@@ -50,19 +50,24 @@ export default {
         publier() {
             const token = localStorage.getItem('userToken');
             const userId = localStorage.getItem('userId')
-            console.log(this.imageName)
+            const auteuriceLastname = this.$store.state.user.lastname
+            const auteuriceFirstname = this.$store.state.user.firstname
             let userData = new FormData();
             if (this.image == null) {
                 userData.append("contenu", this.contenu);
                 userData.append("user_id", userId);
+                userData.append('auteuriceLastname', auteuriceLastname);
+                userData.append('auteuriceFirstname', auteuriceFirstname);
             }else {
                 userData.append("contenu", this.contenu);
                 userData.append("filename", this.imageName);
                 userData.append("image", this.image);
                 userData.append("user_id", userId);
+                userData.append('auteuriceLastname', auteuriceLastname);
+                userData.append('auteuriceFirstname', auteuriceFirstname);
             }
             
-            console.log(userData)
+            console.log('userData',userData)
 
         axios
         .post('/api/posts/', userData, {

@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 //Créer un article
 exports.createArticle = (req, res, next) => {
-  const {contenu, user_id} = req.body
+  const {contenu, user_id, auteuriceLastname, auteuriceFirstname} = req.body
   let image;
  if(req.file == null){
    image = null
@@ -13,7 +13,7 @@ exports.createArticle = (req, res, next) => {
    image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
  }
   const datePost = new Date()
-  connectDB.query('INSERT INTO article SET ?',{image: image, contenu: contenu, date: datePost, user_id: user_id}, (error, result)=>{
+  connectDB.query('INSERT INTO article SET ?',{image: image, contenu: contenu, date: datePost, user_id: user_id, auteuriceLastname: auteuriceLastname, auteuriceFirstname: auteuriceFirstname }, (error, result)=>{
     if(error){
       console.log(error);
     } else{
@@ -27,7 +27,7 @@ exports.createArticle = (req, res, next) => {
 
 //Afficher tous les articles
 exports.getAllArticle = (req, res, next) => {
-  connectDB.query('SELECT * FROM article JOIN user ON article.user_id = user.id ORDER BY date DESC', async (error, result) =>{
+  connectDB.query('SELECT * FROM article ORDER BY date DESC', async (error, result) =>{
    if(error){
      console.log(error);
    }else{

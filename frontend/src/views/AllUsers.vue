@@ -1,22 +1,25 @@
 <template>
-    <div class="comment template">
-        <div class="comment_card m-3" v-for="user in allUsers" :key="user.id"  >
-            <div class="card-body">
-                <p>{{ user.lastname }} {{ user.firstname }}</p>
-                <p>{{ user.description }}</p>
-                <div v-if="user.admin == true">                    
-                    <button @click="deleteUser(user.id)" class="btn btn-sm btn-outline-danger ml-3 mt-1">
-                        <v-icon class="icon" name="regular/trash-alt"/>
-                    </button> 
-                </div>
+      <div class="usersCards">
+        <div class="cards" v-for="user in allUsers" :key="user.id">  
+          <div class="card m-3 cardIndex shadow">
+            <div class="card-body"  id="description">
+              <h2 class="card-title text-info">{{ user.lastname }} {{ user.firstname }}</h2>
+              <p class="font-weight-bold">Présentation : </p><p>{{ user.description }}</p>
             </div>
+            <div class="card-footer bg-white" v-if="verifIsAdmin > 0"> 
+              <button type="submit" class="btn btn-sm btn-outline-danger ml-3 mt-1" @click="deleteUser()">
+                <span class="font-weight-bold">Supprimer le compte <v-icon class="icon" name="regular/trash-alt"/></span>
+              </button>
+                
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
 </template>
 
 <script>
 import axios from 'axios'
-//import {mapState, mapActions} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 
 export default {
   name: 'AllUsers',
@@ -26,16 +29,17 @@ export default {
             firstname: "",
             lastname: "",
             allUsers: [],
+            verifIsAdmin : this.$store.state.user.admin,
+            description: '',
         }
     },
 
     computed:{
-    //    ...mapState(['user']),
+        ...mapState(['user']),
     },
 
     mounted(){
-     //   this.$store.dispatch('getUserInfos');
-        console.log('toto mounted list of users')
+        this.$store.dispatch('getUserInfos');
     //Récupérer tous les utilisateur'ices
         const token = localStorage.getItem('userToken')
             axios
@@ -46,13 +50,13 @@ export default {
                     this.allUsers = response.data
                 })
                .catch(error => {
-                    console.log('get all comment fail')
+                    console.log('get all users fail')
                     console.log(error)
                 })
     }, //fin mounted
 
     methods: {
-     //   ...mapActions(['getUserInfos']),
+       ...mapActions(['getUserInfos']),
 
     //Supprimer le compte
     deleteUser: function(){
@@ -79,3 +83,19 @@ export default {
 
 
 } //fin export
+
+</script>
+
+<style scoped lang="scss">
+@import "../scss/_variables_overrides.scss";
+
+.usersCards{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+ // padding-left: 10em;
+ // padding-right: 10em ;
+
+}
+
+</style>

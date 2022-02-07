@@ -1,9 +1,14 @@
 <template>
   <div class="hello">
     <Header/>
-    <button type="button" class="btn btn-sm btn-outline-light mb-3 mt-3 btnListUser">
-        <router-link class="listUsers" to="/allusers"><span class="font-weight-bold">Voir la liste des personnes inscrites</span></router-link>
-    </button>
+    <div>
+      <button type="button" class="btn btn-sm btn-outline-info mb-3 mt-3 btnListUser">
+        <router-link class="linkListUsers" to="/allusers">
+          <span class="font-weight-bold">Liste des membres <v-icon class="icon" name="users"/></span>
+        </router-link>      
+      </button>
+    </div>
+    
     <h3>Publications</h3>
     <p id="textConnect"></p>
     <button type="submit" class="btn btn-outline-primary mb-3 mt-3 btnNewPost">
@@ -31,11 +36,12 @@ export default {
     Footer,
     Header,
   },
-  data(){
-    return{
-      allArticles: []
-  }
-  }
+  data(){ 
+        return{
+            verifIsAdmin : this.$store.state.user.admin,
+        }
+    },
+
   
 }
 </script>
@@ -60,11 +66,15 @@ ul {
   }
 }
 
-.btnNewPost:hover{
+.btnNewPost:hover, .btnListUser:hover{
     background-color: white;
     color : $primary;
 
-      .linkNewPost:hover{
+      .linkNewPost, .linkListUsers{
+        color: $primary;
+      }
+
+      .linkNewPost:hover, .linkListUsers:hover{
         text-decoration: none;
       }
   }
