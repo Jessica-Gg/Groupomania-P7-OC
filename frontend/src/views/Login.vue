@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="introduction" v-if="mode == 'connexion'">
+    <div class="introduction" >
         <Header/>
     </div>
     <div class="login border rounded shadow-sm bg-light">
@@ -126,6 +126,7 @@ export default {
 
     .introduction{
         margin-bottom: 2em;
+        align-items: center;
     }
 }
 
@@ -151,6 +152,16 @@ export default {
 
     .lastfirstnames{
         margin-right: 1em,
+    }
+}
+
+/* ---------------------------------------------------------------- */
+ /* ---------------------RESPONSIVE TEL.PORTABLES------------------- */
+/* ---------------------------------------------------------------- */
+
+@media screen and (max-width: 479px){
+    .login{
+        width: 90%
     }
 }
 

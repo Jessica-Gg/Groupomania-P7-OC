@@ -199,8 +199,8 @@ export default {
 @import "../scss/_variables_overrides.scss";
 //style de la publication
 .publications_card{
-    padding-left: 10em;
-    padding-right: 10em ;
+    padding-left: 20%;
+    padding-right: 20% ;
 	display: flex;
     flex-direction: column;
 	justify-content: space-between;
@@ -217,6 +217,10 @@ export default {
 
     .card-body{
         padding: 2em;
+
+        img{
+            width: 80%;
+        }
     }
 
     .card-footer{
@@ -253,6 +257,7 @@ export default {
     justify-content: space-between;
     text-align: start;
     padding: 0.5em;
+    
 
     .dataComment{
         width: 80%;
@@ -263,11 +268,36 @@ export default {
     }
 }
 
-.modifyMode{
-    padding: 0.5em;
 
-    textarea{
-        width: 80%;
+  /* ---------------------------------------------------------------- */
+ /* ---------------------RESPONSIVE TEL.PORTABLES------------------- */
+/* ---------------------------------------------------------------- */
+
+@media screen and (max-width: 479px){
+    .publications_card{
+        padding: 0;
     }
 }
+
+  /* ---------------------------------------------------------------- */
+ /* ----------------------RESPONSIVE TABLETTE----------------------- */ 
+/* ---------------------------------------------------------------- */
+@media only screen and (min-width : 480px) and (max-width: 959px){
+    .publications_card{
+        padding-left: 5%;
+        padding-right: 5% ;    
+    }
+}
+
+
+/* ---------------------------------------------------------------- */
+ /* ----------RESPONSIVE TABLETTE PAYSAGE ET PETITS ECRANS---------- */
+/* ---------------------------------------------------------------- */
+@media only screen and (min-width : 960px) and (max-width : 1280px){
+    .publications_card{
+        padding-left: 10%;
+        padding-right: 10% ;
+    }
+}
+
 </style>
