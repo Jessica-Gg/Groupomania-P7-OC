@@ -8,7 +8,8 @@
               <h2 class="card-title text-info">{{ user.lastname }} {{ user.firstname }}</h2>
             </div>
             <div class="card-body" id="description">
-              <p class="font-weight-bold">Présentation : </p><p>{{ user.description }}</p>
+              <h3 class="font-weight-bold">Présentation : </h3>
+              <h4>{{ user.description }}</h4>
               <button type="submit" v-if="mode=='read'" class="btn btn-sm btn-outline-dark mt-1" @click="modifyDescription()">
                 <span class="font-weight-bold">Modifier la description</span>
               </button> 
@@ -153,12 +154,12 @@ export default {
     padding-bottom: 1em;
   }
 
-  .btnNewPost:hover{
-    background-color: white;
-    color : $primary;
+  .btnNewPost:hover {
+    color: white;
 
       .linkNewPost:hover{
-        text-decoration: none;
+          text-decoration: none;
+          color : white
       }
   }
 

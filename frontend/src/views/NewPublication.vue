@@ -96,7 +96,7 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style scoped lang="scss">
 .publications_card{
     padding-left: 10em;
     padding-right: 10em ;

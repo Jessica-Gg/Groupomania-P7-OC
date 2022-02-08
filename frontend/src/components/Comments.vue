@@ -1,22 +1,18 @@
 <template>
-    <div class="comment template">
+    <div class="comment template" v-if="afficher == true">
         <div class="comment_card m-1" v-for="commentaire in allComments" :key="commentaire.id">
-            <div class="card shadow" v-if="article.id == commentaire.article_id">
-                <div class="cardComment" v-if="mode=='read'">
+            <div class="card shadow">
+                <div class="cardComment">
                     <div class="dataComment">
                         <p class="font-weight-bold"><v-icon class="icon" name="regular/user-circle"/> {{ commentaire.auteuriceLastname }} {{ commentaire.auteuriceFirstname }}, {{ moment(commentaire.date).fromNow()}} :</p>
                         <p>{{ commentaire.contenu }}</p>
                     </div>
                     <div class="buttonsActions" v-if="user.id == commentaire.user_id || verifIsAdmin > 0">
-                        <button @click="switchToModifyComment(commentaire.id)" class="btn btn-sm btn-outline-info ml-3"><v-icon class="icon" name="pencil-alt"/></button>
-                        <button @click="deleteComment(commentaire.id)" class="btn btn-sm btn-outline-danger ml-3"><v-icon class="icon" name="regular/trash-alt"/></button>
+                        <button @click="deleteComment(commentaire.id)" class="btn btn-sm btn-outline-danger ml-3">
+                            <span>Supprimer <v-icon class="icon" name="regular/trash-alt"/></span>
+                        </button>
                     </div>
                 </div>
-                <div class="modifyMode" v-if="mode=='modify'" >
-                    <textarea v-model="contenu" id="changeComment" class="textZone" placeholder="Nouveau commentaire"></textarea><br>
-                    <button type="submit" class="btn btn-sm btn-outline-dark ml-3 mt-1" @click="sendModifyComment(commentaire.id)">Enregistrer</button>
-                    <button type="submit" class="btn btn-sm btn-outline-dark ml-3 mt-1" @click="switchToRead()">Annuler</button>
-              </div>
             </div>
         </div>
     </div>
@@ -30,6 +26,9 @@ var moment = require('moment')
 
 export default {
   name: 'Comments',
+  props: {
+       articleId : Number,
+    },
     data(){ 
         return{
             moment:moment,
@@ -40,8 +39,9 @@ export default {
             firstname: "",
             lastname: "",
             mode: "read",
-            article_id:"",
+            article_id: this.articleId,
             verifIsAdmin : this.$store.state.user.admin,
+            afficher: false,
         }
     },
 
@@ -52,15 +52,6 @@ export default {
     methods: {
         ...mapActions(['getUserInfos']),
 
- //  //Changer de mode pour afficher le commentaire
- //  switchToRead(){
- //    this.mode = 'read'
- //  },
- //  
- //  //Passer en mode modification du commentaire
- //  switchToModifyComment(){
- //    this.mode = 'modify'
- //  },
 
     //Supprimer une publication
     deleteComment: function(id){
@@ -80,52 +71,41 @@ export default {
         }
     },
 
-  // //Modifier un commentaire
-  // sendModifyComment : function(id) {
-  //   const token = localStorage.getItem('userToken')  
-  //   if(this.contenu !== null){
-  //     axios
-  //     .put('/api/user/' + id, 
-  //     {
-  //       contenu: this.contenu
-  //     },
-  //     {
-  //       headers: {
-  //         'Authorization': 'Bearer' + token
-  //       }
-  //     })
-  //     .then(response =>{
-  //       console.log(response);
-  //       location.reload();    
-  //     })
-  //     .catch(function (error){
-  //       console.log(error)
-  //     })
-  //   } else {
-  //     alert('Veuillez remplir le champ')
-  //   }
-  // },
+    //Afficher les commentaires
+        seeComments(id) {
+           const token = localStorage.getItem('userToken')
+           console.log('postId',id)
+                axios
+                .get('/api/comment/'+ id, {
+                    headers: { 'Authorization' : 'Bearer' + token},
+                })
+                .then((response) => {
+                    this.allComments = response.data
+                    this.mode = 'seeComments'
+                    console.log('get all comment ok')
+                })
+                .catch(error => {
+                    console.log('get all comment fail')
+                    console.log(error)
+                })
+        },
+
 
     }, //fin methods
 
       mounted(){
-      this.$store.dispatch('getUserInfos');
-    //Récupèrer tous les commentaires
-     const token = localStorage.getItem('userToken')
-            axios
-                .get('/api/comment/', {
-                    headers: {Authorization : 'Bearer' + token},
-                })
-                .then((response) => {
-                    this.allComments = response.data
-                    console.log('get all comment ok')
-                })
-               .catch(error => {
-                console.log('get all comment fail')
-                console.log(error)
-            })
-    },
+        this.$store.dispatch('getUserInfos');
+        this.seeComments(this.article_id);
+      },
 
+    created(){
+        this.$parent.$on('afficheComment' + this.article_id, ()=> {
+            this.afficher = true
+        });
+        this.$parent.$on('cacheComment', this.article_id, () => {
+            this.afficher = false
+        });
+    }
 
 //fin export
 }
