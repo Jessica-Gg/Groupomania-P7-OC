@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const connectDB = require('../connect/db')
-const User = require('../models/user')
 
 exports.signup = (req, res, next) => {
   const {firstname, lastname, email, password, admin} = req.body;
@@ -101,7 +100,6 @@ exports.modifyUser = (req,res, next)=>{
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
   const id = decodedToken.id;
   const newDescription = req.body.description;
-
   connectDB.query('SELECT id FROM user WHERE id=?', [id], async(error, result) => {
     try {
       if (req.params.id == id) {
@@ -127,7 +125,6 @@ exports.deleteUser = (req, res, next) => {
   const token = req.headers.authorization.substr(6);
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
   const id = decodedToken.id;
-
   connectDB.query('SELECT id FROM user WHERE id=?', [id], async(error, result) => {
     try {
       if (req.params.id == id) {

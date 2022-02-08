@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const db = require('./connect/db');
 const morgan = require('morgan')
 
 const userRoutes = require('./routes/user');
@@ -31,11 +30,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/user', userRoutes);
 app.use('/posts', articleRoutes);
 app.use('/comment', commentRoutes);
-
-//Tests de routes via Postman
-//pp.get('/', function(req, res) {
-// res.send('hello world');
-//);
 
 module.exports = app;
 

@@ -12,7 +12,7 @@ export default new Vuex.Store({
       email: 'NC',
       password: 'NC',
       description: 'NC',
-      admin: false,
+      admin: '',
     },
     changeOption : ''
   },

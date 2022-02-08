@@ -1,12 +1,12 @@
 <template>
     <div class="publication template">
         <div class="publications_card m-3" v-for="article in allArticles" :key="article.id" >
-<!-- Zone de la publication -->
+<!-- Section du contenu de la publication -->
             <div class="card cardIndex shadow">
     <!-- Affichage des données de la publication -->
                 <div class="card-header bg-white">
                     <h3 class="card-title text-center">{{ article.auteuriceLastname }} {{ article.auteuriceFirstname }}</h3>
-                    <p class="card-title text-center">{{ moment(article.date).fromNow()}}</p>
+                    <p class="card-title text-center">{{ moment(article.date).format('DD-MM-YYYY HH:MM')}}</p>
                 </div>
     <!-- Contenu et/ou image de la publication -->
                 <div class="card-body">
@@ -17,38 +17,34 @@
                 <div class="card-footer bg-white">
     <!-- Options suppression de la publication si admin ou si auteurice -->
                     <div class="optionsPost mb-3">
-                        <div v-if="user.id == article.user_id || verifIsAdmin > 0">
+                        <div v-if="user.id == article.user_id || verifIsAdmin == true">
                             <button @click.prevent="deletePost(article.id)" class="btn btn-sm btn-outline-danger ml-3 mt-1">
                                 <span>Supprimer <v-icon class="icon" name="regular/trash-alt"/></span>
                             </button>
                         </div>
                     </div>
-<!-- Fin zone de la publication -->    
+<!-- Fin section du contenu de la publication -->    
 
-<!-- Zone des commentaires -->
+<!-- Section des commentaires -->
                     <div class="sectionCommentaires">
     <!-- Ecrire un commentaire -->
-                        <input id="newComment" type="text" @keyup.enter="sendComment(article.id)" v-model="commentaire" aria-label="Ecrire un commentaire" placeholder="Ajouter un commentaire"/>
+                        <textarea v-on:input="updateValue($event.target.value)" id="newComment" type="text" @keyup.enter="sendComment(article.id)" aria-label="Ecrire un commentaire" placeholder="Ajouter un commentaire"></textarea>
                         <button type="submit" @click.prevent="sendComment(article.id)" class="btn btn-sm btn-outline-info ml-3">
                             <span>Envoyer</span>
                         </button>
                         <div class="comment">
     <!-- Afficher/Masquer les commentaires -->
-                            <button type="button" @click="modeSeeComments(article.id)" class="btn btn-sm btn-outline-info ml-3 mt-1">
+                            <button type="button" @click.prevent="modeSeeComments(article.id)" class="btn btn-sm btn-outline-info ml-3 mt-1">
                                 <span>Voir les commentaires</span>
                             </button>
-                            <div>
-                                <button type="button" v-if="mode=='seeComments'" @click="unseeComments(article.id)" class="btn btn-sm btn-outline-info ml-3 mt-1">
-                                    <span>Masquer les commentaires</span>
-                                </button>
-                            </div>
-    <!-- Affichage des commentaires en fonction de l'article  article.id == commentaire.article_id"-->
-                            
+    <!-- Affichage des commentaires en fonction de l'article -->
                             <div v-if="mode=='seeComments'">
+                                <button type="button" @click.prevent="unseeComments(article.id)" class="btn btn-sm btn-outline-info ml-3 mt-1">
+                                    <span>Masquer les commentaires</span>
+                                </button>                    
                                 <Comments :articleId='article.id' /> 
                             </div>
-<!-- Fin zone des commentaires -->
-
+<!-- Fin section des commentaires -->
                         </div>
                     </div>
                 </div>
@@ -73,7 +69,7 @@ export default {
     data : function(){ 
         return{
             moment:moment,
-            contenu: '',
+            contenu: "",
             date: '',
             image: '',
             id:'',
@@ -110,6 +106,12 @@ export default {
     methods: {
         ...mapActions(['getUserInfos']),
 
+        updateValue: function (value) {
+            this.$emit('input', value)
+            this.contenu = value
+            console.log('value',value)
+        },
+
     //Supprimer une publication
         deletePost(id) {
             const token = localStorage.getItem('userToken')
@@ -135,7 +137,7 @@ export default {
             const auteuriceFirstname = this.$store.state.user.firstname
         //Mise dans un objet de toutes les données relative au commentaire à envoyer
             let commentData = {
-                contenu : this.commentaire,
+                contenu : this.contenu,
                 article_id : id,
                 user_id : userId,
                 auteuriceLastname: auteuriceLastname,
@@ -150,7 +152,7 @@ export default {
                 .then((response) => {
                     console.log('post comment')
                     console.log(response)
-                    location.reload();
+                    location.reload();                  
                 })
                 .catch(error => {
                     console.log('post comment fail')
@@ -178,10 +180,11 @@ export default {
         },
 
     //Afficher les commentaires
-    modeSeeComments(id){
-        this.mode = 'seeComments'
-        this.$emit('afficheComment' + id, true)
-    },
+        modeSeeComments(id){
+            this.mode = 'seeComments'
+            this.$emit('afficheComment' + id, true)
+            console.log('toto mode see', id)
+        },
 
     //Ne plus afficher les commentaires
         unseeComments(id) {
@@ -197,7 +200,7 @@ export default {
 
 <style scoped lang="scss">
 @import "../scss/_variables_overrides.scss";
-//style de la publication
+//Style de la publication
 .publications_card{
     padding-left: 20%;
     padding-right: 20% ;
@@ -230,27 +233,28 @@ export default {
         }
 
         .sectionCommentaires{
-            input{
+            textarea{
                 width: 80%;
                 border-color:rgb(127, 187, 255);    
             }
         }
-    }
 
-    .btnLink{
-        color : white;
+        .btn-outline-info{
+            color: $primary;
 
-        .linkNewPost{
-            color: white,
-      }
+            &:hover{
+                color: $primary;
+                background-color: rgb(234, 255, 255);
+            }
+        }
     }
-    
+  
     img{
         max-width: 80%;
     }
 }
 
-//style des commentaires
+//Style des commentaires
 .cardComment{
     display: flex;
     flex-direction: row;
@@ -268,20 +272,16 @@ export default {
     }
 }
 
-
-  /* ---------------------------------------------------------------- */
- /* ---------------------RESPONSIVE TEL.PORTABLES------------------- */
-/* ---------------------------------------------------------------- */
-
+  /* -----------------------RESPONSIVE--------------------- */
+ //Responsive tel portable
 @media screen and (max-width: 479px){
     .publications_card{
         padding: 0;
     }
+
 }
 
-  /* ---------------------------------------------------------------- */
- /* ----------------------RESPONSIVE TABLETTE----------------------- */ 
-/* ---------------------------------------------------------------- */
+ //Responsive tablette
 @media only screen and (min-width : 480px) and (max-width: 959px){
     .publications_card{
         padding-left: 5%;
@@ -289,15 +289,11 @@ export default {
     }
 }
 
-
-/* ---------------------------------------------------------------- */
- /* ----------RESPONSIVE TABLETTE PAYSAGE ET PETITS ECRANS---------- */
-/* ---------------------------------------------------------------- */
+ //Responsive tablette paysage et petits écrans
 @media only screen and (min-width : 960px) and (max-width : 1280px){
     .publications_card{
         padding-left: 10%;
         padding-right: 10% ;
     }
 }
-
 </style>

@@ -4,12 +4,15 @@
       <h1>Mon profil</h1>
         <div class="m-3 publications_card">
           <div class="card cardIndex shadow">
+  <!-- Header avec le nom et le prénom -->
             <div class="card-header bg-white">
               <h2 class="card-title text-info">{{ user.lastname }} {{ user.firstname }}</h2>
             </div>
+  <!-- Présentation/Description -->
             <div class="card-body" id="description">
               <h3 class="font-weight-bold">Présentation : </h3>
               <h4>{{ user.description }}</h4>
+  <!-- Modification de la description -->
               <button type="submit" v-if="mode=='read'" class="btn btn-sm btn-outline-dark mt-1" @click="modifyDescription()">
                 <span class="font-weight-bold">Modifier la description</span>
               </button> 
@@ -19,6 +22,7 @@
                 <button type="submit" class="btn btn-sm btn-outline-dark ml-3 mt-1" @click="switchToRead()">Annuler</button>
               </div>
             </div>
+  <!-- Option de déconnexion et de suppression de compte -->
             <div class="card-footer bg-white">
               <button type="submit" class="btn btn-sm btn-outline-dark mt-1" @click="deconnectAccount()">
                 <span class="font-weight-bold">Se déconnecter</span>
@@ -30,6 +34,7 @@
           </div>
         </div>
     </div>
+  <!-- Accès direct pour créer une nouvelle publication -->
         <button type="submit" class="btn btn-outline-primary mb-3 mt-3 btnNewPost">
           <router-link class="linkNewPost" to="/newpost"><span class="font-weight-bold">Créer une nouvelle publication</span></router-link>
         </button> 
@@ -41,8 +46,8 @@ import axios from 'axios'
 import {mapState, } from 'vuex'
 
 //Si l'utilisateur n'est pas connecté, il est renvoyé à la page de connexion
-const userInfos = localStorage.getItem('userInfos')
-if(userInfos === null ){
+const userId = localStorage.getItem('userId')
+if(userId === null ){
   alert('Vous n\'êtes pas identifié')
   this.$router.push("/login?mode=connexion")
 }

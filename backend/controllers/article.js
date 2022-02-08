@@ -1,7 +1,4 @@
-const Article = require('../models/article');
 const connectDB = require('../connect/db');
-const jwt = require('jsonwebtoken');
-
 
 //Créer un article
 exports.createArticle = (req, res, next) => {
@@ -54,22 +51,9 @@ exports.getOneArticle = (req, res, next) => {
 //getone
 };
 
-//Modifier un article
-exports.modifyArticle = (req, res, next) => {
-  const articleObject = req.file ?
-    { 
-      ...JSON.parse(req.body.article),
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : {...req.body};
-        Article.updateOne({id: req.params.id}, {...articleObject, id: req.params.id})
-          .then(() => res.status(200).json({message: 'Article modifié avec succès !'}))
-          .catch(error => res.status(400).json({error}));  
-};
-
 //Supprimer un article
 exports.deleteArticle = (req, res, next) => {
   const postId = req.params.id;
-
   connectDB.query('SELECT id FROM article WHERE id=?', [postId], async(error, result) => {
     try {
       if (req.params.id == postId) {

@@ -47,6 +47,7 @@ export default {
     methods: {
         ...mapActions(['getUserInfos']),
 
+    //Poster une nouvelle publication
         publier() {
             const token = localStorage.getItem('userToken');
             const userId = localStorage.getItem('userId')
@@ -67,24 +68,23 @@ export default {
                 userData.append('auteuriceFirstname', auteuriceFirstname);
             }
             
-            console.log('userData',userData)
-
-        axios
-        .post('/api/posts/', userData, {
-            headers:{
-                 'Authorization': 'Bearer' + token,
-                 'Content-Type': 'multipart/form-data'
-            }
-        })
-        .then((response) => {
-            console.log(response)
-            this.$router.push("/")
-        })
-        .catch(error => {
-            console.log(error)
-        })
+            axios
+            .post('/api/posts/', userData, {
+                headers:{
+                    'Authorization': 'Bearer' + token,
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then((response) => {
+                console.log(response)
+                this.$router.push("/")
+            })
+            .catch(error => {
+                console.log(error)
+            })
         },
 
+    //Préparation des fichiers avant l'envoi de la publication
         prepareFile (event) {
             console.log('event',event)
             this.image = event.target.files[0]

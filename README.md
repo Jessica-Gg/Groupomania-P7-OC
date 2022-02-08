@@ -7,7 +7,7 @@ Création du backend et du frontend de l'application en utilisant le framework V
 
 1. Assurez-vous que Node.js soit bien installé sur votre ordinateur. 
 
-2. Créez un nouveau dossier sur votre bureau et ouvrez votre éditeur de code à son emplacement
+2. Créez un nouveau dossier et ouvrez votre éditeur de code à son emplacement
 
 3. Clonez-y ce repository avec le lien : 
 `https://github.com/Jessica-Gg/Groupomania-P7-OC.git`

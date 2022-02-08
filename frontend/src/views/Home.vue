@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <Header/>
+<!-- Option pour voir la liste des membres -->
     <div>
       <button type="button" class="btn btn-sm btn-outline-info mb-3 mt-3 btnListUser">
         <router-link class="linkListUsers" to="/allusers">
@@ -8,7 +9,7 @@
         </router-link>      
       </button>
     </div>
-    
+<!-- Affichage des publications par ordre de date décroissant + option pour créer une nouvelle publication -->  
     <h2>Publications</h2>
     <button type="submit" class="btn btn-outline-primary mb-3 mt-3 btnNewPost">
           <router-link class="linkNewPost" to="/newpost"><span class="font-weight-bold">Créer une nouvelle publication</span></router-link>
@@ -19,14 +20,17 @@
 </template>
 
 <script>
-const userInfos = localStorage.getItem('userInfos')
-if(userInfos === null ){
-  alert('Veuillez vous identifier pour partager et interagir avec des publications') 
+//Si l'utilisateur n'est pas connecté, il est renvoyé à la page de connexion
+const userId = localStorage.getItem('userId')
+if(userId == null ){
+  this.$router.push('/login') 
 }
 
 import Publications from '@/components/Publications.vue'
 import Footer from '@/components/Footer.vue'
 import Header from '@/components/Header.vue'
+import {mapState} from 'vuex'
+
 
 export default {
   name: 'Home',
@@ -39,9 +43,15 @@ export default {
         return{
             verifIsAdmin : this.$store.state.user.admin,
         }
+    },  
+
+    computed:{
+        ...mapState(['user']),
     },
 
-  
+      mounted(){
+      this.$store.dispatch('getUserInfos');
+    },
 }
 </script>
 
@@ -65,9 +75,13 @@ ul {
   }
 }
 
-.btnNewPost:hover, .btnListUser:hover{
+.btnNewPost, .btnListUser{
     background-color: white;
     color : $primary;
+
+    &:hover{
+      background-color: rgb(234, 255, 255);
+    }
 
       .linkNewPost, .linkListUsers{
         color: $primary;

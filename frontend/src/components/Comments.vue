@@ -1,10 +1,10 @@
 <template>
-    <div class="comment template" v-if="afficher == true">
+    <div class="comment template" v-if="afficher">
         <div class="comment_card m-1" v-for="commentaire in allComments" :key="commentaire.id">
             <div class="card shadow">
                 <div class="cardComment">
                     <div class="dataComment">
-                        <p class="font-weight-bold"><v-icon class="icon" name="regular/user-circle"/> {{ commentaire.auteuriceLastname }} {{ commentaire.auteuriceFirstname }}, {{ moment(commentaire.date).fromNow()}} :</p>
+                        <p class="font-weight-bold"><v-icon class="icon" name="regular/user-circle"/> {{ commentaire.auteuriceLastname }} {{ commentaire.auteuriceFirstname }}, {{ moment(commentaire.date).format('DD-MM-YYYY HH:MM') }} :</p>
                         <p>{{ commentaire.contenu }}</p>
                     </div>
                     <div class="buttonsActions" v-if="user.id == commentaire.user_id || verifIsAdmin > 0">
@@ -41,7 +41,7 @@ export default {
             mode: "read",
             article_id: this.articleId,
             verifIsAdmin : this.$store.state.user.admin,
-            afficher: false,
+            afficher: false
         }
     },
 
@@ -53,36 +53,35 @@ export default {
         ...mapActions(['getUserInfos']),
 
 
-    //Supprimer une publication
-    deleteComment: function(id){
-        console.log(id)
-        const token = localStorage.getItem('userToken')
-        if(confirm("Voulez-vous supprimer ce commentaire ?")){
-            axios
-            .delete('/api/comment/' + id, {
-                headers: { 'Authorization': 'Bearer' + token }
-            })
-            .then (()=>{
-               location.reload()
-            })
-            .catch(error => {
-                console.log(error)
-            })
-        }
-    },
+    //Supprimer un commentaire
+        deleteComment: function(id){
+            const token = localStorage.getItem('userToken')
+            if(confirm("Voulez-vous supprimer ce commentaire ?")){
+                axios
+                .delete('/api/comment/' + id, {
+                    headers: { 'Authorization': 'Bearer' + token }
+                })
+                .then (()=>{
+                   location.reload()
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+            }
+        },
 
-    //Afficher les commentaires
+    //Récupérer les commentaires
         seeComments(id) {
            const token = localStorage.getItem('userToken')
-           console.log('postId',id)
                 axios
                 .get('/api/comment/'+ id, {
                     headers: { 'Authorization' : 'Bearer' + token},
                 })
                 .then((response) => {
                     this.allComments = response.data
-                    this.mode = 'seeComments'
                     console.log('get all comment ok')
+                    this.afficher = true
+
                 })
                 .catch(error => {
                     console.log('get all comment fail')
@@ -93,22 +92,22 @@ export default {
 
     }, //fin methods
 
-      mounted(){
+    mounted(){
         this.$store.dispatch('getUserInfos');
         this.seeComments(this.article_id);
       },
 
     created(){
-        this.$parent.$on('afficheComment' + this.article_id, ()=> {
+        this.$parent.$on('afficheComment' + this.article_id, () => {
             this.afficher = true
         });
+
         this.$parent.$on('cacheComment', this.article_id, () => {
             this.afficher = false
         });
-    }
+    },
 
-//fin export
-}
+}//fin export
 
 </script>
 
@@ -138,7 +137,5 @@ export default {
         width: 80%;
     }
 }
-
-
 
 </style>

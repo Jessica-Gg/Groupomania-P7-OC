@@ -95,7 +95,6 @@ export default {
                 .then(response => {
                     localStorage.setItem('userToken',response.data.token)
                     localStorage.setItem('userId',response.data.id)
-                    localStorage.setItem('userInfos',this.userInfos)
                     this.$router.push("/profil")
                 })
                  .catch(function (error) {
@@ -155,10 +154,8 @@ export default {
     }
 }
 
-/* ---------------------------------------------------------------- */
- /* ---------------------RESPONSIVE TEL.PORTABLES------------------- */
-/* ---------------------------------------------------------------- */
-
+/* ---------------------RESPONSIVE------------------------- */
+//Responsive tel. portable
 @media screen and (max-width: 479px){
     .login{
         width: 90%
