@@ -18,7 +18,14 @@ export default{
           groupName : 'Groupomania',
         }
       },
-    }
+    
+
+  created(){
+    this.$store.dispatch("me");
+    console.log('me created',this.$store.state)
+  },
+  
+}
 </script>
 
 

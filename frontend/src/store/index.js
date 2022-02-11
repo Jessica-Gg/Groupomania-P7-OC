@@ -7,7 +7,7 @@ Vue.use(Vuex)
 const vuexPersist = new VuexPersist({
   key: 'groupomania',
   storage: window.localStorage,
-  reducer: (state) => ({ user: state.user }), //only save user profile for reload
+  reducer: (state) => ({ user: state.user }),
 })
 
 export default new Vuex.Store({
@@ -25,12 +25,13 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    USER_INFOS(state,[firstname, lastname, email, description, admin]) {
+    USER_INFOS(state,[userId, firstname, lastname, email, description, admin]) {
+      state.userId = userId
       state.user.firstname = firstname,
       state.user.lastname = lastname,
       state.user.email = email,
       state.user.description = description,
-      state.user.admin = admin   
+      state.user.admin = admin
     },
     
     modifOption(state,value) {
@@ -40,7 +41,7 @@ export default new Vuex.Store({
 
   actions: {
   me(valeur){
-    console.log('me')
+    console.log('me function')
     const token = localStorage.getItem('userToken')
     axios
       .get('/api/user/me', {
@@ -49,8 +50,8 @@ export default new Vuex.Store({
         }
       })
     .then(response => {
-      console.log('me',response)
-      valeur.commit('USER_INFOS',[response.data[0].firstname, response.data[0].lastname, 
+      console.log('me response',response)
+      valeur.commit('USER_INFOS',[response.data[0].id, response.data[0].firstname, response.data[0].lastname, 
       response.data[0].email, response.data[0].description, response.data[0].admin])
     })
     .catch(error => {

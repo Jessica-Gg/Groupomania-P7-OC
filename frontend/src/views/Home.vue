@@ -21,9 +21,6 @@
 </template>
 
 <script>
-//Si l'utilisateur n'est pas connecté, il est renvoyé à la page de connexion
-
-
 import Publications from '@/components/Publications.vue'
 import Footer from '@/components/Footer.vue'
 import Header from '@/components/Header.vue'
@@ -36,20 +33,12 @@ export default {
     Publications,
     Footer,
     Header,
-  },
-  data(){ 
-        return{
-            verifIsAdmin : this.$store.state.user.admin,
-        }
-    },  
+  },  
 
     computed:{
-        ...mapState(['user']),
+        ...mapState(['user', 'userId']),
     },
 
-      mounted(){
-      this.$store.dispatch('me');
-    },
 }
 </script>
 

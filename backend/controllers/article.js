@@ -2,7 +2,8 @@ const connectDB = require('../connect/db');
 
 //Créer un article
 exports.createArticle = (req, res, next) => {
-  const {contenu, user_id, auteuriceLastname, auteuriceFirstname} = req.body
+  const user_id = res.locals.userId;
+  const {contenu} = req.body
   let image;
  if(req.file == null){
    image = null
@@ -10,7 +11,7 @@ exports.createArticle = (req, res, next) => {
    image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
  }
   const datePost = new Date()
-  connectDB.query('INSERT INTO article SET ?',{image: image, contenu: contenu, date: datePost, user_id: user_id, auteuriceLastname: auteuriceLastname, auteuriceFirstname: auteuriceFirstname }, (error, result)=>{
+  connectDB.query('INSERT INTO article SET ?',{image: image, contenu: contenu, date: datePost, user_id: user_id}, (error, result)=>{
     if(error){
       console.log(error);
       res.status(500).send("failed to delete article");

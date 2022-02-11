@@ -7,7 +7,7 @@
                         <p class="font-weight-bold"><v-icon class="icon" name="regular/user-circle"/> {{ commentaire.lastname }} {{ commentaire.firstname }}, {{ moment(commentaire.date).format('DD-MM-YYYY HH:MM') }} :</p>
                         <p>{{ commentaire.contenu }}</p>
                     </div>
-                    <div class="buttonsActions" v-if="user.id == commentaire.user_id || verifIsAdmin">
+                    <div class="buttonsActions" v-if="userId == commentaire.user_id || verifIsAdmin">
                         <button @click="deleteComment(commentaire.id)" class="btn btn-sm btn-outline-danger ml-3">
                             <span>Supprimer <v-icon class="icon" name="regular/trash-alt"/></span>
                         </button>
@@ -35,12 +35,12 @@ export default {
             allComments: [],
             contenu: "",
             date: "",
-            id:"",
             firstname: "",
             lastname: "",
             mode: "read",
             article_id: this.articleId,
             verifIsAdmin : this.$store.state.user.admin,
+            userId : this.$store.state.userId,
             afficher: false
         }
     },

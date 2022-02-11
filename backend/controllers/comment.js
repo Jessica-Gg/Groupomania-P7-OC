@@ -17,7 +17,8 @@ exports.getAllComment = (req, res, next) => {
 
 //Créer un article
 exports.createComment = (req, res, next) => {
-  const { contenu, user_id, article_id } = req.body
+  const user_id = res.locals.userId;
+  const { contenu, article_id } = req.body
   const datePost = new Date()
   connectDB.query('INSERT INTO commentaire SET ?', { date: datePost, contenu: contenu, user_id: user_id, article_id: article_id }, (error, result) => {
     if (error) {

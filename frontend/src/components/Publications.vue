@@ -17,7 +17,7 @@
                 <div class="card-footer bg-white">
     <!-- Options suppression de la publication si admin ou si auteurice -->
                     <div class="optionsPost mb-3">
-                        <div v-if="user.id == article.user_id || verifIsAdmin">
+                        <div v-if="userId == article.user_id || verifIsAdmin">
                             <button @click.prevent="deletePost(article.id)" class="btn btn-sm btn-outline-danger ml-3 mt-1">
                                 <span>Supprimer <v-icon class="icon" name="regular/trash-alt"/></span>
                             </button>
@@ -66,24 +66,22 @@ export default {
   components:{
       Comments
   },
-    data : function(){ 
-        return{
+    data : function(){    
+      return{
             moment:moment,
             contenu: "",
             date: '',
             image: '',
-            id:'',
             allArticles: [],
             allComments: [],
-            userId : this.$store.state.user.id,
             commentaire:'',
             verifIsAdmin : this.$store.state.user.admin,
             mode: 'unseeComment', 
         }
     },
 
-    computed:{
-        ...mapState(['user']),
+    computed: {
+        ...mapState(['user', 'userId']),
     },
 
     mounted(){
@@ -131,16 +129,10 @@ export default {
     
     //Créer un commentaire
         sendComment(id) {
-            const userId = this.$store.state.user.id
-            const auteuriceLastname = this.$store.state.user.lastname
-            const auteuriceFirstname = this.$store.state.user.firstname
         //Mise dans un objet de toutes les données relative au commentaire à envoyer
             let commentData = {
                 contenu : this.contenu,
                 article_id : id,
-                user_id : userId,
-                auteuriceLastname: auteuriceLastname,
-                auteuriceFirstname: auteuriceFirstname
             }
             console.log(commentData)
             if (this.commentaire !== null){
