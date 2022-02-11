@@ -45,7 +45,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['getUserInfos']),
+        ...mapActions(['me']),
 
     //Poster une nouvelle publication
         publier() {
@@ -71,7 +71,7 @@ export default {
             axios
             .post('/api/posts/', userData, {
                 headers:{
-                    'Authorization': 'Bearer' + token,
+                    'Authorization': 'Bearer ' + token,
                     'Content-Type': 'multipart/form-data'
                 }
             })
@@ -98,8 +98,8 @@ export default {
 
 <style scoped lang="scss">
 .publications_card{
-    padding-left: 10em;
-    padding-right: 10em ;
+    padding-left: 20%;
+    padding-right: 20% ;
 	display: flex;
     flex-direction: column;
 	
@@ -114,5 +114,30 @@ export default {
     height: 5em;
 }
         
+}
+
+/* -----------------------RESPONSIVE--------------------- */
+ //Responsive tel portable
+@media screen and (max-width: 479px){
+    .publications_card{
+        padding: 0;
+    }
+
+}
+
+ //Responsive tablette
+@media only screen and (min-width : 480px) and (max-width: 959px){
+    .publications_card{
+        padding-left: 5%;
+        padding-right: 5% ;    
+    }
+}
+
+ //Responsive tablette paysage et petits écrans
+@media only screen and (min-width : 960px) and (max-width : 1280px){
+    .publications_card{
+        padding-left: 10%;
+        padding-right: 10% ;
+    }
 }
 </style>

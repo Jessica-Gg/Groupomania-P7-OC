@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const morgan = require('morgan')
+const auth = require('./middleware/auth');
 
 const userRoutes = require('./routes/user');
 const articleRoutes = require('./routes/article');
@@ -28,8 +29,13 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //Routes des utilisateurs, articles et commentaires
 app.use('/user', userRoutes);
-app.use('/posts', articleRoutes);
-app.use('/comment', commentRoutes);
+app.use('/posts', auth, articleRoutes);
+app.use('/comment', auth, commentRoutes);
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({"message": "something went wrong"});
+});      
 
 module.exports = app;
 

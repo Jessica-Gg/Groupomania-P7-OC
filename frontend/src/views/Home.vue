@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <Header/>
+    <h2>Bonjour {{ user.lastname }}</h2>
 <!-- Option pour voir la liste des membres -->
     <div>
       <button type="button" class="btn btn-sm btn-outline-info mb-3 mt-3 btnListUser">
@@ -21,10 +22,7 @@
 
 <script>
 //Si l'utilisateur n'est pas connecté, il est renvoyé à la page de connexion
-const userId = localStorage.getItem('userId')
-if(userId == null ){
-  this.$router.push('/login') 
-}
+
 
 import Publications from '@/components/Publications.vue'
 import Footer from '@/components/Footer.vue'
@@ -50,7 +48,7 @@ export default {
     },
 
       mounted(){
-      this.$store.dispatch('getUserInfos');
+      this.$store.dispatch('me');
     },
 }
 </script>

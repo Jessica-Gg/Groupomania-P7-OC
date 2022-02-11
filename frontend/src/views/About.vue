@@ -22,15 +22,15 @@ export default {
 <style scoped lang="scss">
 .about{
   margin-top: 1.5em;
+
+  img{
+    width: 85%
+  }
 }
 
 /* ---------------------RESPONSIVE------------------------- */
  //Responsive tel. portable
 @media screen and (max-width: 479px){
-    img{
-      width: 85%
-    }
-
     h1{
       font-size: 2em;
     }

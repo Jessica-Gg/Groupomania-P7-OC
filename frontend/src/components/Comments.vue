@@ -4,10 +4,10 @@
             <div class="card shadow">
                 <div class="cardComment">
                     <div class="dataComment">
-                        <p class="font-weight-bold"><v-icon class="icon" name="regular/user-circle"/> {{ commentaire.auteuriceLastname }} {{ commentaire.auteuriceFirstname }}, {{ moment(commentaire.date).format('DD-MM-YYYY HH:MM') }} :</p>
+                        <p class="font-weight-bold"><v-icon class="icon" name="regular/user-circle"/> {{ commentaire.lastname }} {{ commentaire.firstname }}, {{ moment(commentaire.date).format('DD-MM-YYYY HH:MM') }} :</p>
                         <p>{{ commentaire.contenu }}</p>
                     </div>
-                    <div class="buttonsActions" v-if="user.id == commentaire.user_id || verifIsAdmin > 0">
+                    <div class="buttonsActions" v-if="user.id == commentaire.user_id || verifIsAdmin">
                         <button @click="deleteComment(commentaire.id)" class="btn btn-sm btn-outline-danger ml-3">
                             <span>Supprimer <v-icon class="icon" name="regular/trash-alt"/></span>
                         </button>
@@ -50,7 +50,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['getUserInfos']),
+        ...mapActions(['me']),
 
 
     //Supprimer un commentaire
@@ -59,7 +59,7 @@ export default {
             if(confirm("Voulez-vous supprimer ce commentaire ?")){
                 axios
                 .delete('/api/comment/' + id, {
-                    headers: { 'Authorization': 'Bearer' + token }
+                    headers: { 'Authorization': 'Bearer ' + token }
                 })
                 .then (()=>{
                    location.reload()
@@ -75,7 +75,7 @@ export default {
            const token = localStorage.getItem('userToken')
                 axios
                 .get('/api/comment/'+ id, {
-                    headers: { 'Authorization' : 'Bearer' + token},
+                    headers: { 'Authorization' : 'Bearer ' + token},
                 })
                 .then((response) => {
                     this.allComments = response.data
@@ -93,7 +93,7 @@ export default {
     }, //fin methods
 
     mounted(){
-        this.$store.dispatch('getUserInfos');
+        this.$store.dispatch('me');
         this.seeComments(this.article_id);
       },
 

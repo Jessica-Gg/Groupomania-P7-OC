@@ -45,13 +45,6 @@
 import axios from 'axios'
 import {mapState, } from 'vuex'
 
-//Si l'utilisateur n'est pas connecté, il est renvoyé à la page de connexion
-const userId = localStorage.getItem('userId')
-if(userId === null ){
-  alert('Vous n\'êtes pas identifié')
-  this.$router.push("/login?mode=connexion")
-}
-
 export default {
   name: 'Profil',
     
@@ -90,7 +83,7 @@ export default {
         axios
         .delete('/api/user/' + id, {
           headers: {
-            'Authorization': 'Bearer' + token
+            'Authorization': 'Bearer ' + token
           }
         })
         .then (()=>{
@@ -122,7 +115,7 @@ export default {
         },
         {
           headers: {
-            'Authorization': 'Bearer' + token
+            'Authorization': 'Bearer ' + token
           }
         })
         .then(response =>{
@@ -141,9 +134,9 @@ export default {
   //fin methods
   },
 
-  //Chargement de la fonction qui fait l'appel à l'API pour récupérer les informations de l'utilisateur
+  //Chargement de la fonction qui fait l'appel à l'API pour récupérer les informations de l'utilisateurice
   mounted(){
-      this.$store.dispatch('getUserInfos');
+      this.$store.dispatch('me');
     },
 
 //fin export

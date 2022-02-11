@@ -6,11 +6,10 @@
               <h2 class="card-title text-info">{{ user.lastname }} {{ user.firstname }}</h2>
               <p class="font-weight-bold">Présentation : </p><p>{{ user.description }}</p>
             </div>
-            <div class="card-footer bg-white" v-if="verifIsAdmin > 0"> 
+            <div class="card-footer bg-white" v-if="verifIsAdmin"> 
               <button type="submit" class="btn btn-sm btn-outline-danger ml-3 mt-1" @click="deleteUser()">
                 <span class="font-weight-bold">Supprimer le compte <v-icon class="icon" name="regular/trash-alt"/></span>
-              </button>
-                
+              </button>   
             </div>
           </div>
         </div>
@@ -39,12 +38,12 @@ export default {
     },
 
     mounted(){
-        this.$store.dispatch('getUserInfos');
+        this.$store.dispatch('me');
     //Récupérer tous les utilisateur'ices
         const token = localStorage.getItem('userToken')
             axios
                 .get('/api/user/', {
-                    headers: {Authorization : 'Bearer' + token},
+                    headers: {'Authorization' : 'Bearer ' + token},
                 })
                 .then((response) => {
                     this.allUsers = response.data
@@ -56,7 +55,7 @@ export default {
     }, //fin mounted
 
     methods: {
-       ...mapActions(['getUserInfos']),
+       ...mapActions(['me']),
 
     //Supprimer le compte
     deleteUser: function(){
@@ -66,7 +65,7 @@ export default {
         axios
         .delete('/api/user/' + id, {
           headers: {
-            'Authorization': 'Bearer' + token
+            'Authorization': 'Bearer ' + token
           }
         })
         .then (()=>{

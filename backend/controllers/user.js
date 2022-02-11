@@ -63,14 +63,31 @@ exports.login = (req, res, next) => {
   }  
 }
 
+exports.me = (req, res, next) => {
+    try {
+      const id = res.locals.userId;
+      connectDB.query('SELECT * FROM user WHERE id = ?', [id], async (error, result) =>{
+        if(error){
+          console.log(error);
+          res.status(500).send("failed to get user");
+        }else{
+          console.log(result)
+          res.send(result); 
+        }
+      });
+    } catch {
+        res.status(403)
+    }
+}
+
 //Récupérer un'e seul'e utilisateur'ice
 exports.getOneUser= (req, res, next) => { 
-  const token = req.headers.authorization.substr(6);
-  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-  const id = decodedToken.id;
+  console.log('plop',res.locals)
+  const id = res.locals.userId;
   connectDB.query('SELECT * FROM user WHERE id = ?', [id], async (error, result) =>{
    if(error){
      console.log(error);
+     res.status(500).send("failed to get user");
    }else{
      console.log(result)
      res.send(result)
@@ -85,6 +102,7 @@ exports.getAllUser = (req, res, next) => {
   connectDB.query('SELECT * FROM user ', async (error, result) =>{
    if(error){
      console.log(error);
+     res.status(500).send("failed to get users");
    }else{
     // console.log(result)
      res.send(result)
@@ -96,53 +114,33 @@ exports.getAllUser = (req, res, next) => {
 
 //Modifier un'e utilisateur'ice
 exports.modifyUser = (req,res, next)=>{
-  const token = req.headers.authorization.substr(6);
-  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-  const id = decodedToken.id;
+  const id = res.locals.userId;
   const newDescription = req.body.description;
-  connectDB.query('SELECT id FROM user WHERE id=?', [id], async(error, result) => {
-    try {
-      if (req.params.id == id) {
-        connectDB.query('UPDATE user SET description=? WHERE id=?', [newDescription, id], async(error, result) => {
-          if(error){
-            console.log(error);
-          }else{
-            console.log(result)
-            res.status(200).json({ message: "Description mise à jour" })
-          }
-        });
-      }
-   }catch { (error) =>
-      res.status(400).json({ error: "Impossible de mettre à jour votre profil !" })  
-    };
-  //dbconnect
-  }) 
+  connectDB.query('UPDATE user SET description=? WHERE id=?', [newDescription, id], async(error, result) => {
+    if(error){
+      console.error(error);
+      res.status(500).send("failed to update user");
+    }else if(result.affectedRows < 1){
+      res.status(404).send('this user does not exist');
+    } else {
+      res.send('user updated');
+    }
+  });
 //modify
 }
 
 //Supprimer un'e utilisateur'ice
 exports.deleteUser = (req, res, next) => {
-  const token = req.headers.authorization.substr(6);
-  const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-  const id = decodedToken.id;
-  connectDB.query('SELECT id FROM user WHERE id=?', [id], async(error, result) => {
-    try {
-      if (req.params.id == id) {
-        connectDB.query('DELETE FROM user WHERE id=?', [id], async(error, result) => {
-          if(error){
-            console.log(error);
-          }else{
-            console.log(result)
-          }
-          res.send('Utilisateur supprimé')
-      });
-      }
-  } catch { (error => {
-      res.status(400).json({error: error});
-      alert('Utilisateur non supprimé')
-    })
-  }
-//dbconnect
-  })
+  const id = res.locals.userId;
+  connectDB.query('DELETE FROM user WHERE id=?', [id], async(error, result) => {
+    if(error){
+      console.error(error);
+      res.status(500).send("failed to delete user");
+    }else if(result.affectedRows < 1){
+      res.status(404).send('this user does not exist');
+    } else {
+      res.send('user deleted');
+    }
+  });
 //delete  
 };

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import axios from 'axios'
 
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";  //
 import "bootstrap/dist/css/bootstrap.css";                  //
@@ -15,8 +16,17 @@ Vue.component('v-icon', Icon)                               //
 
 Vue.config.productionTip = false
 
+axios.interceptors.request.use(function (config) {
+  const token = localStorage.getItem('userToken');
+  config.headers.Authorization =  'Bearer ' + token;
+  return config;
+});
+
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  created(){
+    this.$store.dispatch("me");
+  }
 }).$mount('#app')

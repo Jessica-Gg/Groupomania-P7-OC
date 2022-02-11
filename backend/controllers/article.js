@@ -13,22 +13,22 @@ exports.createArticle = (req, res, next) => {
   connectDB.query('INSERT INTO article SET ?',{image: image, contenu: contenu, date: datePost, user_id: user_id, auteuriceLastname: auteuriceLastname, auteuriceFirstname: auteuriceFirstname }, (error, result)=>{
     if(error){
       console.log(error);
+      res.status(500).send("failed to delete article");
     } else{
       console.log(result)
       res.send(result)
     }
-    //res.send('Nouvelle publication créée')
-});
-  
+  }); 
 };
 
 //Afficher tous les articles
 exports.getAllArticle = (req, res, next) => {
-  connectDB.query('SELECT * FROM article ORDER BY date DESC', async (error, result) =>{
+  connectDB.query('SELECT a.*, u.lastname, u.firstname FROM article a INNER JOIN user u ON a.user_id = u.id ORDER BY date DESC', async (error, result) =>{
    if(error){
      console.log(error);
+     res.status(500).send("failed to delete article");
    }else{
-    // console.log(result)
+     console.log(result)
      res.send(result)
    }
  //dbconnect
@@ -54,30 +54,14 @@ exports.getOneArticle = (req, res, next) => {
 //Supprimer un article
 exports.deleteArticle = (req, res, next) => {
   const postId = req.params.id;
-  connectDB.query('SELECT id FROM article WHERE id=?', [postId], async(error, result) => {
-    try {
-      if (req.params.id == postId) {
-        connectDB.query('DELETE FROM article WHERE id=?', [postId], async(error, result) => {
-          if(error){
-            console.log(error);
-          }else{
-            console.log(result)
-            connectDB.query('DELETE FROM commentaire WHERE article_id=?', [postId], async(error, result) => {
-              if(error){
-                console.log(error);
-              }else{
-                console.log(result)
-              }}
-            );
-          }
-          res.send('Article supprimé')
-      });
-      }
-  } catch { (error => {
-      res.status(400).json({error: error});
-      alert('Article non supprimé')
-    })
-  }
-//dbconnect
-  })
+  connectDB.query('DELETE FROM article WHERE id=?', [postId], async(error, result) => {
+    if(error){
+      console.error(error);
+      res.status(500).send("failed to delete article");
+    }else if(result.affectedRows < 1){
+      res.status(404).send('cet article n’existe pas');
+    } else {
+      res.send('Article supprimé');
+    }
+  });
 };

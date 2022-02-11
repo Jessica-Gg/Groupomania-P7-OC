@@ -5,7 +5,7 @@
             <div class="card cardIndex shadow">
     <!-- Affichage des données de la publication -->
                 <div class="card-header bg-white">
-                    <h3 class="card-title text-center">{{ article.auteuriceLastname }} {{ article.auteuriceFirstname }}</h3>
+                    <h3 class="card-title text-center">{{ article.lastname }} {{ article.firstname }}</h3>
                     <p class="card-title text-center">{{ moment(article.date).format('DD-MM-YYYY HH:MM')}}</p>
                 </div>
     <!-- Contenu et/ou image de la publication -->
@@ -17,7 +17,7 @@
                 <div class="card-footer bg-white">
     <!-- Options suppression de la publication si admin ou si auteurice -->
                     <div class="optionsPost mb-3">
-                        <div v-if="user.id == article.user_id || verifIsAdmin == true">
+                        <div v-if="user.id == article.user_id || verifIsAdmin">
                             <button @click.prevent="deletePost(article.id)" class="btn btn-sm btn-outline-danger ml-3 mt-1">
                                 <span>Supprimer <v-icon class="icon" name="regular/trash-alt"/></span>
                             </button>
@@ -75,7 +75,7 @@ export default {
             id:'',
             allArticles: [],
             allComments: [],
-            userId : localStorage.getItem('userId'),
+            userId : this.$store.state.user.id,
             commentaire:'',
             verifIsAdmin : this.$store.state.user.admin,
             mode: 'unseeComment', 
@@ -87,12 +87,12 @@ export default {
     },
 
     mounted(){
-      this.$store.dispatch('getUserInfos');
+      this.$store.dispatch('me');
     //Récupèrer toutes les publications
      const token = localStorage.getItem('userToken')
             axios
                 .get('/api/posts/', {
-                    headers: {Authorization : 'Bearer' + token},
+                    headers: {'Authorization' : 'Bearer ' + token},
                 })
                 .then((response) => {
                     this.allArticles = response.data
@@ -104,7 +104,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['getUserInfos']),
+        ...mapActions(['me']),
 
         updateValue: function (value) {
             this.$emit('input', value)
@@ -118,7 +118,7 @@ export default {
             if(confirm("Voulez-vous supprimer cette publication ?")){
                 axios
                 .delete('/api/posts/' + id, {
-                    headers: { 'Authorization': 'Bearer' + token }
+                    headers: { 'Authorization': 'Bearer ' + token }
                 })
                 .then (()=>{
                 location.reload()
@@ -131,8 +131,7 @@ export default {
     
     //Créer un commentaire
         sendComment(id) {
-            const token = localStorage.getItem('userToken');
-            const userId = localStorage.getItem('userId');
+            const userId = this.$store.state.user.id
             const auteuriceLastname = this.$store.state.user.lastname
             const auteuriceFirstname = this.$store.state.user.firstname
         //Mise dans un objet de toutes les données relative au commentaire à envoyer
@@ -146,9 +145,7 @@ export default {
             console.log(commentData)
             if (this.commentaire !== null){
                 axios
-                .post('/api/comment/', commentData, {
-                    headers:{ 'Authorization': 'Bearer' + token }
-                })
+                .post('/api/comment/', commentData)
                 .then((response) => {
                     console.log('post comment')
                     console.log(response)
@@ -168,7 +165,7 @@ export default {
             if(confirm("Voulez-vous supprimer ce commentaire ?")){
                 axios
                 .delete('/api/comment/' + id, {
-                    headers: { 'Authorization': 'Bearer' + token }
+                    headers: { 'Authorization': 'Bearer ' + token }
                 })
                 .then (()=>{
                    location.reload()

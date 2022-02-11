@@ -71,7 +71,7 @@ export default {
 
     methods: {
         createAccount: function () {
-            console.log('toto', this.userInfos)
+            //console.log('toto', this.userInfos)
             if (this.userInfos.password === this.userInfos.confirmPassword)
             {
                 axios
@@ -94,7 +94,6 @@ export default {
                 .post('/api/user/login', this.userInfos)
                 .then(response => {
                     localStorage.setItem('userToken',response.data.token)
-                    localStorage.setItem('userId',response.data.id)
                     this.$router.push("/profil")
                 })
                  .catch(function (error) {

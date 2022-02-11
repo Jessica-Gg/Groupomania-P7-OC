@@ -1,28 +1,34 @@
 import Vuex from 'vuex';
 import axios from 'axios';
 import Vue from 'vue';
+import VuexPersist from 'vuex-persist'
 Vue.use(Vuex)
 
+const vuexPersist = new VuexPersist({
+  key: 'groupomania',
+  storage: window.localStorage,
+  reducer: (state) => ({ user: state.user }), //only save user profile for reload
+})
+
 export default new Vuex.Store({
+  plugins: [vuexPersist.plugin],
   state :{
+    userId: '', // à renseigner à l’init via le /me
     user:{
-      id: 'NC',
       firstname: 'NC',
       lastname: 'NC',
       email: 'NC',
-      password: 'NC',
       description: 'NC',
-      admin: '',
+      admin: false,
     },
     changeOption : ''
   },
+
   mutations: {
-    USER_INFOS(state,[id ,firstname, lastname, email, password, description, admin]) {
-      state.user.id = id,
+    USER_INFOS(state,[firstname, lastname, email, description, admin]) {
       state.user.firstname = firstname,
       state.user.lastname = lastname,
       state.user.email = email,
-      state.user.password = password,
       state.user.description = description,
       state.user.admin = admin   
     },
@@ -31,28 +37,32 @@ export default new Vuex.Store({
       state.changeOption = value
     }
   },
+
   actions: {
-  getUserInfos(valeur){
-    const id = localStorage.getItem('userId')
+  me(valeur){
+    console.log('me')
     const token = localStorage.getItem('userToken')
     axios
-      .get('/api/user/'+ id, {
+      .get('/api/user/me', {
         headers:{
-          'Authorization': 'Bearer' + token
+          'Authorization': 'Bearer ' + token
         }
       })
     .then(response => {
-      console.log(response)
-      valeur.commit('USER_INFOS',[response.data[0].id, response.data[0].firstname, response.data[0].lastname, response.data[0].email, response.data[0].password, response.data[0].description, response.data[0].admin]	)
+      console.log('me',response)
+      valeur.commit('USER_INFOS',[response.data[0].firstname, response.data[0].lastname, 
+      response.data[0].email, response.data[0].description, response.data[0].admin])
     })
     .catch(error => {
       console.log(error); 
     });
   },
+
     changeParam(contexte, value) {
       contexte.commit('modifOption',value)
     }         
-    },
+  }, //actions
+
     modules: {
   }
 });
