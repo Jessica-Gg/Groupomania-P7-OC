@@ -22,12 +22,10 @@ export default{
 
   created(){
     this.$store.dispatch("me");
-    console.log('me created',this.$store.state)
   },
   
 }
 </script>
-
 
 <style scoped lang="scss">
 @import "./scss/_variables_overrides.scss";

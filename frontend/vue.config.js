@@ -7,6 +7,9 @@ module.exports = {
           '^/api/': '/', // rewrite path
         }
       },
+      '^/images': {
+        target: 'http://localhost:3000',
+      },
     }
   }
 }

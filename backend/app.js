@@ -34,8 +34,16 @@ app.use('/comment', auth, commentRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).json({"message": "something went wrong"});
-});      
+  if (error instanceof NotFoundError) {
+    res.status(404).json({ "message": error.message });
+  } else if (error instanceof NotAllowedError) {
+    res.status(403).json({ "message": error.message });
+  }else if (error instanceof WrongDataError){
+    res.status(401).json({ "message": error.message})
+  }else {
+    res.status(500).json({ "message": "something went wrong" });
+  }
+});
 
 module.exports = app;
 

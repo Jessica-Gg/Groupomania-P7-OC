@@ -18,7 +18,9 @@ Vue.config.productionTip = false
 
 axios.interceptors.request.use(function (config) {
   const token = localStorage.getItem('userToken');
-  config.headers.Authorization =  'Bearer ' + token;
+  if (token) {
+    config.headers.Authorization = 'Bearer ' + token;
+  }
   return config;
 });
 
@@ -26,8 +28,7 @@ new Vue({
   router,
   store,
   render: h => h(App),
-  async created(){
+  async created() {
     await this.$store.dispatch("me");
-    console.log('me created',this.$store.state)
   }
 }).$mount('#app')

@@ -5,10 +5,10 @@ import Home from '../views/Home.vue'
 Vue.use(VueRouter)
 
 //eslint-disable-next-line no-unused-vars
-function checkIfUserIAuthenticated(_,__, next){
-  if(localStorage.getItem('userToken') == null){
-    next('/login') 
-  } 
+function checkIfUserIAuthenticated(_, __, next) {
+  if (localStorage.getItem('userToken') == null) {
+    next('/login')
+  }
   next()
 }
 
@@ -17,7 +17,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-    beforeEnter : checkIfUserIAuthenticated
+    beforeEnter: checkIfUserIAuthenticated
   },
   {
     path: '/about',
@@ -28,30 +28,26 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue'),
-    props: route => ({mode: route.query.mode})
+    props: route => ({ mode: route.query.mode })
   },
   {
     path: '/profil',
     name: 'Profil',
     component: () => import('../views/Profil.vue'),
-    beforeEnter : checkIfUserIAuthenticated
+    beforeEnter: checkIfUserIAuthenticated
   },
   {
     path: '/newpost',
     name: 'NewPost',
     component: () => import('../views/NewPublication.vue'),
-    beforeEnter : checkIfUserIAuthenticated
-
+    beforeEnter: checkIfUserIAuthenticated
   },
   {
     path: '/allusers',
     name: 'AllUsers',
     component: () => import('../views/AllUsers.vue'),
-    beforeEnter : checkIfUserIAuthenticated
-
+    beforeEnter: checkIfUserIAuthenticated
   },
-
-
 ]
 
 const router = new VueRouter({
