@@ -118,8 +118,6 @@ exports.modifyUser = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
   const userToDeleteId = req.params.id;
   const userSelfId = res.locals.userId;
-  console.log(userSelfId)
-  console.log(userToDeleteId)
   if (userToDeleteId !== userSelfId){
     connectDB.query('DELETE FROM user WHERE id=?', [userToDeleteId], async (error, result) => {
       if (error) {
