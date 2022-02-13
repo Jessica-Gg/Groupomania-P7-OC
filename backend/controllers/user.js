@@ -116,28 +116,29 @@ exports.modifyUser = (req, res, next) => {
 
 //Supprimer un'e utilisateur'ice
 exports.deleteUser = (req, res, next) => {
-  const id = res.locals.userId;
-  connectDB.query('DELETE FROM user WHERE id=?', [id], async (error, result) => {
-    if (error) {
-      throw new Error(error);
-    } else if (result.affectedRows < 1) {
-      throw new NotFoundError('this user does not exist');
-    } else {
-      res.send('user deleted');
-    }
-  });
-};
-
-//Supprimer un'e utilisateur'ice
-exports.deleteUser = (req, res, next) => {
-  const id = req.params.id;
-  connectDB.query('DELETE FROM user WHERE id=?', [id], async (error, result) => {
-    if (error) {
-      throw new Error(error);
-    } else if (result.affectedRows < 1) {
-      throw new NotFoundError('this user does not exist');
-    } else {
-      res.send('user deleted');
-    }
-  });
+  const userToDeleteId = req.params.id;
+  const userSelfId = res.locals.userId;
+  console.log(userSelfId)
+  console.log(userToDeleteId)
+  if (userToDeleteId !== userSelfId){
+    connectDB.query('DELETE FROM user WHERE id=?', [userToDeleteId], async (error, result) => {
+      if (error) {
+        throw new Error(error);
+      } else if (result.affectedRows < 1) {
+        throw new NotFoundError('this user does not exist');
+      } else {
+        res.send('user deleted');
+      }
+    });
+  } else {
+    connectDB.query('DELETE FROM user WHERE id=?', [userSelfId], async (error, result) => {
+      if (error) {
+        throw new Error(error);
+      } else if (result.affectedRows < 1) {
+        throw new NotFoundError('this user does not exist');
+      } else {
+        res.send('user deleted');
+      }
+    });
+  }
 };

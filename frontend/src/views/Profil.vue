@@ -59,7 +59,7 @@
             <button
               type="submit"
               class="btn btn-sm btn-outline-danger ml-3 mt-1"
-              @click="deleteAccount()"
+              @click="deleteAccount(user.userId)"
             >
               <span class="font-weight-bold"
                 >Supprimer mon compte
@@ -91,7 +91,7 @@ export default {
   data() {
     return {
       token: "",
-      id: "",
+      userId: "",
       firstname: "",
       lastname: "",
       description: "",
@@ -116,8 +116,8 @@ export default {
     },
 
     //Supprimer le compte
-    deleteAccount() {
-      const id = this.$store.state.userId;
+    deleteAccount(id) {
+      //const id = this.$store.state.userId;
       if (
         confirm(
           "Voulez-vous supprimer votre compte ? Toutes vos informations seront effacées"
