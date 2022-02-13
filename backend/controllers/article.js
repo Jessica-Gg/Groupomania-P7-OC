@@ -22,7 +22,8 @@ exports.createArticle = (req, res, next) => {
 
 //Afficher tous les articles
 exports.getAllArticle = (req, res, next) => {
-  connectDB.query('SELECT a.*, u.lastname, u.firstname FROM article a INNER JOIN user u ON a.user_id = u.id ORDER BY date DESC', async (error, result) => {
+  connectDB.query('SELECT a.*, u.lastname, u.firstname FROM article a INNER JOIN user u ON a.user_id = u.id ORDER BY date DESC',
+   async (error, result) => {
     if (error) {
       throw new Error(error);
     } else {

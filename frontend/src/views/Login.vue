@@ -134,7 +134,6 @@ export default {
 
   methods: {
     createAccount() {
-      //console.log('toto', this.userInfos)
       if (this.userInfos.password === this.userInfos.confirmPassword) {
         axios
           .post("/api/user/signup", this.userInfos)

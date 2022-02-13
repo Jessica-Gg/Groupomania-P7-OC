@@ -3,7 +3,8 @@ const connectDB = require('../connect/db');
 //Afficher tous les commentaires
 exports.getAllComment = (req, res, next) => {
   const articleId = req.params.id
-  connectDB.query('SELECT c.*, u.lastname, u.firstname FROM commentaire c INNER JOIN user u ON c.user_id = u.id WHERE article_id=? ORDER BY date DESC', [articleId], async (error, result) => {
+  connectDB.query('SELECT c.*, u.lastname, u.firstname FROM commentaire c INNER JOIN user u ON c.user_id = u.id WHERE article_id=? ORDER BY date DESC',
+   [articleId], async (error, result) => {
     if (error) {
       throw new Error(error);
     } else {

@@ -94,10 +94,9 @@ export default {
           console.log(error);
         });
     },
-  }, //fin methods
+  },
 
   mounted() {
-    this.$store.dispatch("me");
     this.seeComments(this.article_id);
   },
 

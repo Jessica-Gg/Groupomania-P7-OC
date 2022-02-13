@@ -57,7 +57,7 @@ exports.login = (req, res, next) => {
       })
     })
   } catch (error) {
-    console.log(error)
+    throw new Error(error);
   }
 }
 
@@ -117,6 +117,20 @@ exports.modifyUser = (req, res, next) => {
 //Supprimer un'e utilisateur'ice
 exports.deleteUser = (req, res, next) => {
   const id = res.locals.userId;
+  connectDB.query('DELETE FROM user WHERE id=?', [id], async (error, result) => {
+    if (error) {
+      throw new Error(error);
+    } else if (result.affectedRows < 1) {
+      throw new NotFoundError('this user does not exist');
+    } else {
+      res.send('user deleted');
+    }
+  });
+};
+
+//Supprimer un'e utilisateur'ice
+exports.deleteUser = (req, res, next) => {
+  const id = req.params.id;
   connectDB.query('DELETE FROM user WHERE id=?', [id], async (error, result) => {
     if (error) {
       throw new Error(error);

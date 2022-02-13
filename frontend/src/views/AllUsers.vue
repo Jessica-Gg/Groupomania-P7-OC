@@ -13,7 +13,7 @@
           <button
             type="submit"
             class="btn btn-sm btn-outline-danger ml-3 mt-1"
-            @click="deleteUser()"
+            @click="deleteUser(user.id)"
           >
             <span class="font-weight-bold"
               >Supprimer le compte
@@ -63,13 +63,12 @@ export default {
     ...mapActions(["me"]),
 
     //Supprimer le compte
-    deleteUser() {
-      const id = this.$store.state.userId;
+    deleteUser(id) {
       if (confirm("Voulez-vous supprimer ce compte ?")) {
         axios
           .delete("/api/user/" + id)
           .then(() => {
-            localStorage.clear();
+            this.$router.go();
           })
           .catch((error) => {
             console.log(error);
